@@ -41,7 +41,8 @@
 .menu-open .menu-btn::after { transform: translateY(-6px) rotate(-45deg); }
 
 /* ---------- 1. 첫 화면 ---------- */
-.visual { position: relative; min-height: max(760px, 100svh); padding-top: calc(var(--header-h) + clamp(40px, 7vh, 90px)); background: var(--sky-fade); overflow: hidden; }
+/* 사진 묶음 높이(38vw)만큼 키워 문구와 겹치지 않게 한다 */
+.visual { position: relative; min-height: max(760px, 100svh, calc(480px + 38vw)); padding-top: calc(var(--header-h) + clamp(40px, 7vh, 90px)); background: var(--sky-fade); overflow: hidden; }
 .visual .deco i:nth-child(1) { left: 10%; top: 32%; } .visual .deco i:nth-child(2) { right: 23%; top: 14%; }
 .visual .deco i:nth-child(3) { left: 4%; top: 72%; } .visual .deco i:nth-child(4) { right: 14%; top: 62%; }
 .slides { position: relative; z-index: 2; text-align: center; min-height: clamp(210px, 22vw, 260px); }

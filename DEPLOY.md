@@ -13,7 +13,11 @@ Claude Code·어드민에서 수정 → GitHub main에 커밋
 
 **https://github.com/PauliKim/pondmakers-site** (공개). 코드와 화면 문구는 원래 공개 정보라 공개 저장소여도 문제가 없습니다. 비밀값은 저장소에 넣지 않고 Cloudflare 환경 변수에만 둡니다.
 
-## 2단계. Cloudflare Pages 연결
+## 2단계. Cloudflare Pages 연결 (완료, 2026-10-23)
+
+지금 상태: 프로젝트 `pondmakers`(Kimmhaa@gmail.com 계정) → https://pondmakers.pages.dev, 운영 브랜치 `main`, 빌드 명령 없음, 출력 `/`. GitHub의 Cloudflare Workers and Pages 앱에 `forrestlive-site`, `pondmakers-site` 두 저장소만 허용되어 있습니다.
+
+처음부터 다시 할 때:
 
 1. https://dash.cloudflare.com → 왼쪽 **Workers & Pages** → **Create** → **Pages** 탭 → **Connect to Git**
 2. **GitHub** → Cloudflare Pages 앱 설정에서 저장소 접근에 `pondmakers-site`를 추가합니다(숲세권 때 **Only select repositories**로 설치했다면 목록에 하나 더 고르기).

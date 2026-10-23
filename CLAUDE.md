@@ -3,7 +3,7 @@
 폰드메이커스(PondMakers Inc.) 회사 소개 사이트. 예전 그누보드(카페24 호스팅) 사이트의 레이아웃과 내용을 정적 사이트로 옮겼다.
 숲세권 라이브 공연 사이트(`PauliKim/forrestlive-site`)와 같은 방식(정적 파일 + Cloudflare Pages + 문구 어드민)으로 운영한다.
 - 저장소: https://github.com/PauliKim/pondmakers-site (기본 브랜치 `main`)
-- 배포: Cloudflare Pages 프로젝트 `pondmakers` → https://pondmakers.pages.dev (연결 방법은 `DEPLOY.md`)
+- 배포: Cloudflare Pages 프로젝트 `pondmakers` → https://pondmakers.pages.dev (2026-10-23 연결 완료. 어드민 저장·문의 메일 환경 변수는 아직 없음 → `DEPLOY.md` 3·4단계)
 - 도메인 pondmakers.com은 아직 예전 사이트(카페24)를 가리킨다. 옮기는 방법은 `DEPLOY.md` 5단계. 메일(MX, mailplug)은 건드리지 않는다.
 
 ## 대화와 작성 언어
