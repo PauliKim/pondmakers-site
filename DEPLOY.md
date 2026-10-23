@@ -86,13 +86,24 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 2. 사이트 키를 `index.html`의 `<form class="inquiry-form" … data-turnstile="">` 안에 넣고 커밋
 3. 비밀 키를 환경 변수 `TURNSTILE_SECRET`(Secret)에 넣고 다시 배포
 
-## 5단계. pondmakers.com 도메인 옮기기 (결정 필요)
+## 5단계. pondmakers.com 도메인 옮기기 (www 연결로 결정, 2026-10-23)
+
+결정: 네임서버는 카페24에 그대로 두고 **www.pondmakers.com만** 새 사이트로 연결합니다. 메일(mailplug MX, SPF TXT)은 건드리지 않습니다.
+
+- [x] Cloudflare Pages → pondmakers → Custom domains에 `www.pondmakers.com` 추가(“My DNS provider”, DNS 확인 대기 중)
+- [ ] 카페24 DNS 관리 → pondmakers.com → `www` 레코드 수정: 지금 `CNAME pondmakers.com.` → **`CNAME pondmakers.pages.dev.`**
+- [ ] Cloudflare에서 **Check DNS records** → Active 확인(HTTPS 자동)
+- [ ] 루트(pondmakers.com) → `https://www.pondmakers.com` 넘기기: 카페24 호스팅의 도메인 포워딩(또는 웹 루트 `.htaccess`에 301)으로. 루트 A 레코드(220.73.160.28)는 넘기기가 동작하는 동안 그대로 둡니다.
+- [ ] 넘기기가 확인되면 카페24 호스팅 자료(문의 기록 DB, 게시판) 백업
+
+사이트의 canonical·sitemap·공유 이미지 주소는 이미 `https://www.pondmakers.com/`으로 맞춰 두었습니다.
+
+### 다른 방법(참고)
 
 지금 pondmakers.com은 카페24 호스팅(220.73.160.28)을 가리키고, 네임서버도 카페24입니다. 메일은 mailplug(MX)입니다.
 
 - **권장: 네임서버를 Cloudflare로 옮기기.** Cloudflare에 사이트 `pondmakers.com`을 추가하면 기존 DNS 레코드를 읽어 옵니다. MX(mailplug)와 TXT가 그대로 들어왔는지 확인한 뒤, 가비아(도메인 등록처)에서 네임서버를 Cloudflare가 알려 준 두 개로 바꿉니다. 그다음 Pages → Custom domains에 `pondmakers.com`, `www.pondmakers.com`을 추가합니다. 이렇게 하면 루트 주소 연결이 쉽고 pondmakers.com에도 Access를 걸 수 있습니다.
 - 대안: 카페24 DNS에서 `www`만 CNAME `pondmakers.pages.dev`로 바꾸기. 루트(pondmakers.com)는 CNAME을 걸 수 없어 카페24 쪽 www 넘기기 설정이 따로 필요합니다.
-- 도메인을 옮긴 뒤 `index.html`의 `og:image` 주소를 `https://pondmakers.com/…`으로 바꿉니다(지금은 pages.dev 주소).
 - 바꾸기 전에 카페24 호스팅에 남은 자료(문의 기록 DB, 게시판)를 백업합니다. 예전 주소(`/bbs/board.php…`, `/theme/basic/policy/sub01.php` 등)는 `_redirects`가 새 주소로 넘깁니다.
 
 ## 운영하면서

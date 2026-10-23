@@ -4,7 +4,7 @@
 숲세권 라이브 공연 사이트(`PauliKim/forrestlive-site`)와 같은 방식(정적 파일 + Cloudflare Pages + 문구 어드민)으로 운영한다.
 - 저장소: https://github.com/PauliKim/pondmakers-site (기본 브랜치 `main`)
 - 배포: Cloudflare Pages 프로젝트 `pondmakers` → https://pondmakers.pages.dev (2026-10-23 연결 완료. 어드민 저장·문의 메일 환경 변수는 아직 없음 → `DEPLOY.md` 3·4단계)
-- 도메인 pondmakers.com은 아직 예전 사이트(카페24)를 가리킨다. 옮기는 방법은 `DEPLOY.md` 5단계. 메일(MX, mailplug)은 건드리지 않는다.
+- 정식 주소는 https://www.pondmakers.com (카페24 DNS에서 www만 CNAME으로 연결, 루트는 www로 넘김). 진행 상황은 `DEPLOY.md` 5단계. 네임서버와 메일(MX, mailplug)은 건드리지 않는다.
 
 ## 대화와 작성 언어
 - 사용자와는 한국어로 대화한다.
