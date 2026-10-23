@@ -33,6 +33,11 @@ if (/(^|\.)pondmakers\.com$/.test(location.hostname)) location.replace("https://
 <main class="layout">
   <section class="editor" aria-label="문구 편집">
     <div class="editor-top">
+      <div class="seg seg-lang" role="group" aria-label="고칠 언어" id="seg-lang">
+        <button type="button" data-lang="ko" aria-pressed="true">한국어</button>
+        <button type="button" data-lang="en" aria-pressed="false">영어 EN</button>
+        <button type="button" data-lang="ja" aria-pressed="false">일본어 JP</button>
+      </div>
       <label class="search"><span class="sr">문구 찾기</span><input type="search" id="search" placeholder="문구나 번호로 찾기"></label>
       <label class="only-changed"><input type="checkbox" id="only-changed"> 바뀐 문구만</label>
       <nav class="groups" id="group-nav" aria-label="구역"></nav>

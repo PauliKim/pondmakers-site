@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-lang="ko" data-root="">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,9 +7,13 @@
 <title data-copy="A-01">폰드메이커스</title>
 <meta name="description" data-copy="A-02" content="일상이 무대가 되고 팬덤이 일상이 되는 곳. 아티스트와 팬이 함께 성장하는 팬덤 문화 플랫폼 굿덕, 굿덕샵, 숲세권 라이브를 만드는 컬쳐테크 기업 폰드메이커스입니다.">
 <link rel="canonical" href="https://www.pondmakers.com/">
+<link rel="alternate" hreflang="ko" href="https://www.pondmakers.com/">
+<link rel="alternate" hreflang="en" href="https://www.pondmakers.com/en/">
+<link rel="alternate" hreflang="ja" href="https://www.pondmakers.com/ja/">
+<link rel="alternate" hreflang="x-default" href="https://www.pondmakers.com/en/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:site_name" content="폰드메이커스">
+<meta property="og:site_name" data-copy="A-03" content="폰드메이커스">
 <meta property="og:title" data-copy="A-03" content="폰드메이커스">
 <meta property="og:description" data-copy="A-04" content="작은 연못에서 시작해, 세상을 뒤흔드는 거대한 파동으로.">
 <meta property="og:image" content="https://www.pondmakers.com/assets/logo/og-img.jpg">
@@ -32,7 +36,17 @@
 .gnb a { font: 600 var(--t-15)/1 var(--font-en); color: var(--title); letter-spacing: .01em; padding: 8px 0; position: relative; }
 .gnb a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent); transform: scaleX(0); transition: transform .3s var(--ease); }
 .gnb a:hover::after, .gnb a.on::after { transform: scaleX(1); }
-.hd-side { flex: none; width: 140px; display: flex; justify-content: flex-end; }
+.hd-side { flex: none; width: 140px; display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
+/* 언어 선택: 원본처럼 지구 모양 단추 → KO·EN·JP 목록 */
+.lang { position: relative; }
+.lang-btn { height: 44px; padding: 0 10px; border: 0; background: none; display: inline-flex; align-items: center; gap: 6px; color: var(--title); font: 600 var(--t-14)/1 var(--font-en); border-radius: var(--radius-pill); }
+.lang-btn i { width: 20px; height: 20px; background: currentColor; -webkit-mask: url(assets/img/ic-lang.svg) center/contain no-repeat; mask: url(assets/img/ic-lang.svg) center/contain no-repeat; }
+.lang-btn:hover { background: var(--surface); }
+.lang-list { position: absolute; right: 0; top: calc(100% + 8px); min-width: 96px; padding: 6px; border-radius: var(--radius-20); background: var(--card); box-shadow: var(--shadow-float); border: 1px solid var(--line-soft); display: grid; gap: 2px; z-index: 5; }
+.lang-list[hidden] { display: none; }
+.lang-list a { display: block; padding: 10px 14px; border-radius: 12px; font: 600 var(--t-14)/1 var(--font-en); color: var(--text); }
+.lang-list a:hover { background: var(--surface); color: var(--title); }
+.lang-list a[aria-current="true"] { color: var(--accent); }
 .menu-btn { display: none; width: 44px; height: 44px; border: 0; background: none; position: relative; }
 .menu-btn span, .menu-btn::before, .menu-btn::after { content: ""; position: absolute; left: 11px; right: 11px; height: 2px; background: var(--title); border-radius: 2px; transition: transform .3s, opacity .3s; }
 .menu-btn::before { top: 15px; } .menu-btn span { top: 21px; } .menu-btn::after { top: 27px; }
@@ -280,25 +294,35 @@ dialog.policy::backdrop { background: var(--scrim); }
 </style>
 </head>
 <body>
-<a class="skip" href="#main">본문 바로가기</a>
+<a class="skip" href="#main" data-copy="K-01">본문 바로가기</a>
 
 <header class="hd" id="hd">
   <div class="hd-inner">
-    <a class="logo" href="./" aria-label="폰드메이커스 처음으로"><img class="logo-light" src="assets/logo/logo.svg" alt="pondmakers" width="140" height="21"><img class="logo-dark" src="assets/logo/logo-white.svg" alt="pondmakers" width="140" height="21"></a>
-    <nav class="gnb" id="gnb" aria-label="주 메뉴">
+    <a class="logo" href="./" data-copy-aria="K-02" aria-label="폰드메이커스 처음으로"><img class="logo-light" src="assets/logo/logo.svg" alt="pondmakers" width="140" height="21"><img class="logo-dark" src="assets/logo/logo-white.svg" alt="pondmakers" width="140" height="21"></a>
+    <nav class="gnb" id="gnb" data-copy-aria="K-03" aria-label="주 메뉴">
       <a href="#section02" data-copy="B-01">VISION</a>
       <a href="#section03" data-copy="B-02">SERVICE</a>
       <a href="#section04" data-copy="B-03">CULTURE &amp; TECHNOLOGY</a>
       <a href="#section05" data-copy="B-04">NEWS</a>
       <a href="#section06" data-copy="B-05">CONTACT</a>
     </nav>
-    <div class="hd-side"><button class="menu-btn" type="button" id="menu-btn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="gnb"><span></span></button></div>
+    <div class="hd-side">
+      <div class="lang" id="lang">
+        <button class="lang-btn" type="button" id="lang-btn" aria-expanded="false" aria-controls="lang-list" data-copy-aria="K-19" aria-label="언어 선택"><i aria-hidden="true"></i><span id="lang-now">KO</span></button>
+        <ul class="lang-list" id="lang-list" hidden>
+          <li><a data-lang-link="ko" href="./" hreflang="ko" lang="ko">KO</a></li>
+          <li><a data-lang-link="en" href="en/" hreflang="en" lang="en">EN</a></li>
+          <li><a data-lang-link="ja" href="ja/" hreflang="ja" lang="ja">JP</a></li>
+        </ul>
+      </div>
+      <button class="menu-btn" type="button" id="menu-btn" data-copy-aria="K-04" aria-label="메뉴 열기" aria-expanded="false" aria-controls="gnb"><span></span></button>
+    </div>
   </div>
 </header>
 
 <main id="main">
   <!-- 1. 첫 화면: 문구 네 장이 5초마다 넘어간다 -->
-  <section id="section01" class="visual" aria-roledescription="carousel" aria-label="소개">
+  <section id="section01" class="visual" aria-roledescription="carousel" data-copy-aria="K-06" aria-label="소개">
     <div class="deco" aria-hidden="true"><i></i><i></i><i class="s"></i><i class="s"></i></div>
     <div class="wrap slides" id="slides">
       <div class="slide on"><h1><span data-copy="C-01">일상이 무대가 되고<br>팬덤이 일상이 되는 곳</span></h1><p><span data-copy="C-02">무대 위에서만 존재하는 아티스트가 아니라, 일상 속 고품질 영상 콘텐츠를 통해<br>언제 어디서든 대중과 만날수 있는 살아있는 콘텐츠</span></p></div>
@@ -307,19 +331,19 @@ dialog.policy::backdrop { background: var(--scrim); }
       <div class="slide"><h2><span data-copy="C-07">Boundaries Blurred,<br>Music Empowered</span></h2><p><span data-copy="C-08">기술은 경계를 허물고, 그 안에서 음악은 더 강력한 힘을 얻습니다.<br>폰드메이커스는 제약 없는 창작과 아티스트의 권한 강화를 통해 그 변화를 이끕니다.</span></p></div>
     </div>
     <div class="slide-ctrl">
-      <button class="prev" type="button" id="slide-prev" aria-label="이전 문구"></button>
+      <button class="prev" type="button" id="slide-prev" data-copy-aria="K-07" aria-label="이전 문구"></button>
       <span class="slide-count" id="slide-count"><span id="slide-now">1</span><em></em><b>4</b></span>
-      <button class="next" type="button" id="slide-next" aria-label="다음 문구"></button>
+      <button class="next" type="button" id="slide-next" data-copy-aria="K-08" aria-label="다음 문구"></button>
     </div>
     <div class="collage" aria-hidden="true">
       <svg viewBox="0 0 1904 521" fill="none" preserveAspectRatio="none"><path d="M-11.5 502.609C77.3 502.609 176 309.608 305 265.109C434 220.61 570.979 361.13 649.5 309.109C839.658 183.129 1019.5 -21.8908 1116.5 24.1091C1213.5 70.109 1025.5 382.109 1125.5 429.109C1225.5 476.109 1356 124.608 1461 193.109C1566 261.61 1411.5 398.609 1558.5 450.609C1705.5 502.609 1838.5 220.61 1947.5 220.61" stroke-width="35" stroke-linecap="round"/></svg>
-      <figure class="p1"><img src="assets/img/visual01.jpg" alt="라디오 방송하는 사람"></figure>
-      <figure class="p2"><img src="assets/img/visual02.jpg" alt="스피커를 클로즈업한 장면"></figure>
-      <figure class="p3"><img src="assets/img/visual03.jpg" alt="헤드폰을 쓰고 즐겁게 노래를 듣는 여성"></figure>
-      <figure class="p4"><img src="assets/img/visual04.jpg" alt="마이크 앞에서 피아노를 연주하는 뮤지션의 손"></figure>
-      <figure class="p5"><img src="assets/img/visual06.jpg" alt="파란 하늘 아래 음악을 감상하며 눈을 감고 있는 여성"></figure>
-      <figure class="p6"><img src="assets/img/visual05.jpg" alt="스튜디오에서 마이크 앞에 선 여성 아티스트"></figure>
-      <figure class="p7"><img src="assets/img/visual07.jpg" alt="탁자 위에 놓인 블루투스 스피커"></figure>
+      <figure class="p1"><img src="assets/img/visual01.jpg" alt=""></figure>
+      <figure class="p2"><img src="assets/img/visual02.jpg" alt=""></figure>
+      <figure class="p3"><img src="assets/img/visual03.jpg" alt=""></figure>
+      <figure class="p4"><img src="assets/img/visual04.jpg" alt=""></figure>
+      <figure class="p5"><img src="assets/img/visual06.jpg" alt=""></figure>
+      <figure class="p6"><img src="assets/img/visual05.jpg" alt=""></figure>
+      <figure class="p7"><img src="assets/img/visual07.jpg" alt=""></figure>
     </div>
   </section>
 
@@ -338,12 +362,12 @@ dialog.policy::backdrop { background: var(--scrim); }
         </div>
         <div class="stats" id="stats">
           <div class="circle" aria-hidden="true"><span></span><span></span><span></span></div>
-          <div class="mockup" data-reveal><img src="assets/img/mockup.png" alt="굿덕 애플리케이션 화면" width="1000" height="1830" loading="lazy"></div>
+          <div class="mockup" data-reveal><img src="assets/img/mockup.png" data-copy-alt="K-09" alt="굿덕 애플리케이션 화면" width="1000" height="1830" loading="lazy"></div>
           <div class="stat-col left">
             <div class="stat-label" data-reveal>
               <em data-copy="D-07">SINCE 2021. 10 ~</em>
               <p data-copy="D-08">신뢰할 수 있는 성장 파트너</p>
-              <img src="assets/img/goodduck.svg" alt="굿덕">
+              <img src="assets/img/goodduck.svg" data-copy-alt="K-10" alt="굿덕">
             </div>
             <div class="stat" data-reveal><figure><img src="assets/img/ic-about01.svg" alt=""></figure><dl><dt data-copy="D-09">레이블 파트너십</dt><dd data-count data-copy="D-10">100+</dd></dl></div>
             <div class="stat" data-reveal><figure><img src="assets/img/ic-about02.svg" alt=""></figure><dl><dt data-copy="D-11">입점 아티스트</dt><dd data-count data-copy="D-12">300+</dd></dl></div>
@@ -353,7 +377,7 @@ dialog.policy::backdrop { background: var(--scrim); }
             <div class="stat-label" data-reveal>
               <em data-copy="D-15">SINCE 2021. 06 ~</em>
               <p data-copy="D-16">일상을 채우는 온오프라인 팬덤 콘텐츠</p>
-              <img class="live" src="assets/img/live.svg" alt="숲세권 라이브">
+              <img class="live" src="assets/img/live.svg" data-copy-alt="K-11" alt="숲세권 라이브">
             </div>
             <div class="stat" data-reveal><figure><img src="assets/img/ic-about04.svg" alt=""></figure><dl><dt data-copy="D-17">아티스트 콘텐츠 제작</dt><dd data-count data-copy="D-18">500+</dd></dl></div>
             <div class="stat" data-reveal><figure><img src="assets/img/ic-about05.svg" alt=""></figure><dl><dt data-copy="D-19">공연/콘서트 기획</dt><dd data-count data-copy="D-20">100+</dd></dl></div>
@@ -373,10 +397,10 @@ dialog.policy::backdrop { background: var(--scrim); }
         <h2 data-copy="E-02">아티스트와 팬이 만나는<br>모든 순간에 가치를 더하다</h2>
       </div>
       <div class="cards">
-        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-03">굿덕</h3><p data-copy="E-04">스타와 팬, 그리고 레이블이 함께 소통하는 공식 플랫폼.<br>굿덕은 진정한 팬덤 문화를 위한 연결의 시작입니다.</p><a class="btn btn-circle" href="https://goodduck.io/" target="_blank" rel="noopener" aria-label="굿덕 바로가기"></a></div></article>
-        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-05">굿덕샵</h3><p data-copy="E-06">팬의 마음을 담은 굿즈, 아티스트의 내일을 이어주는 굿덕샵.<br>누구나 만들고, 함께 즐기는 팬덤 굿즈 플랫폼입니다.</p><a class="btn btn-circle" href="https://goodduckshop.com/" target="_blank" rel="noopener" aria-label="굿덕샵 바로가기"></a></div></article>
-        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-07">숲세권 라이브</h3><p data-copy="E-08">뮤지션들의 이야기와 노래로 채워질 숲세권 라이브가 전할<br>잔잔한 휴식에 함께 해주세요.</p><a class="btn btn-circle" href="https://forrestlive.com/" target="_blank" rel="noopener" aria-label="숲세권 라이브 바로가기"></a></div></article>
-        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-09">굿 파트너스</h3><p data-copy="E-10">브랜드, 레이블, 아티스트와의 시너지를 통해<br>팬덤의 새로운 가능성을 여는 굿덕 파트너 프로그램.</p><a class="btn btn-circle" href="#section06" data-partner aria-label="굿 파트너스 문의하기"></a></div></article>
+        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-03">굿덕</h3><p data-copy="E-04">스타와 팬, 그리고 레이블이 함께 소통하는 공식 플랫폼.<br>굿덕은 진정한 팬덤 문화를 위한 연결의 시작입니다.</p><a class="btn btn-circle" href="https://goodduck.io/" target="_blank" rel="noopener" data-copy-aria="K-12" aria-label="굿덕 바로가기"></a></div></article>
+        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-05">굿덕샵</h3><p data-copy="E-06">팬의 마음을 담은 굿즈, 아티스트의 내일을 이어주는 굿덕샵.<br>누구나 만들고, 함께 즐기는 팬덤 굿즈 플랫폼입니다.</p><a class="btn btn-circle" href="https://goodduckshop.com/" target="_blank" rel="noopener" data-copy-aria="K-13" aria-label="굿덕샵 바로가기"></a></div></article>
+        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-07">숲세권 라이브</h3><p data-copy="E-08">뮤지션들의 이야기와 노래로 채워질 숲세권 라이브가 전할<br>잔잔한 휴식에 함께 해주세요.</p><a class="btn btn-circle" href="https://forrestlive.com/" target="_blank" rel="noopener" data-copy-aria="K-14" aria-label="숲세권 라이브 바로가기"></a></div></article>
+        <article class="card"><i class="bg"></i><div class="card-text"><h3 data-copy="E-09">굿 파트너스</h3><p data-copy="E-10">브랜드, 레이블, 아티스트와의 시너지를 통해<br>팬덤의 새로운 가능성을 여는 굿덕 파트너 프로그램.</p><a class="btn btn-circle" href="#section06" data-partner data-copy-aria="K-15" aria-label="굿 파트너스 문의하기"></a></div></article>
       </div>
     </div>
   </section>
@@ -395,7 +419,7 @@ dialog.policy::backdrop { background: var(--scrim); }
           <p><img src="assets/img/ic-tech02.png" alt=""><span data-copy="F-05">CULTURE INNOVATION COMPANY</span></p>
         </div>
         <div class="tech-thumbs">
-          <figure class="on"><img src="assets/img/tech01.jpg" alt="보랏빛 조명 아래 무대에 선 아티스트들" loading="lazy"></figure>
+          <figure class="on"><img src="assets/img/tech01.jpg" data-copy-alt="K-16" alt="보랏빛 조명 아래 무대에 선 아티스트들" loading="lazy"></figure>
           <figure><img src="assets/img/tech02.jpg" alt="" loading="lazy"></figure>
         </div>
         <div class="tech-col tech-titles">
@@ -415,7 +439,7 @@ dialog.policy::backdrop { background: var(--scrim); }
       <h2 data-copy="G-02">가장 먼저 만나는 폰드메이커스 이야기</h2>
       <p data-copy="G-03">폰드메이커스가 전하는 생동감 있는 콘텐츠와 최신 파트너십 소식,<br>놓치기 아까운 이벤트를 매주 전해드립니다.</p>
     </div>
-    <div class="news-track" id="news" aria-label="뉴스 목록"></div>
+    <div class="news-track" id="news" data-copy-aria="K-17" aria-label="뉴스 목록"></div>
   </section>
 
   <!-- 6. 문의 -->
@@ -466,7 +490,7 @@ dialog.policy::backdrop { background: var(--scrim); }
           <label for="q-body"><span data-copy="H-19">문의 내용</span> <i class="mark">*</i></label>
           <textarea id="q-body" name="message" maxlength="5000" required data-copy-ph="H-20" placeholder="문의 내용을 입력해주세요"></textarea>
         </div>
-        <div class="form-row hp" aria-hidden="true"><label for="q-site">홈페이지</label><input id="q-site" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="form-row hp" aria-hidden="true"><label for="q-site">Website</label><input id="q-site" name="website" type="text" tabindex="-1" autocomplete="off"></div>
         <!-- 스팸 방지(Cloudflare Turnstile). 위 form의 data-turnstile에 사이트 키를 넣으면 나온다 -->
         <div class="captcha" id="captcha" hidden></div>
         <div class="agree">
@@ -503,7 +527,7 @@ dialog.policy::backdrop { background: var(--scrim); }
   <div class="wrap">
     <div class="ft-top">
       <div>
-        <img class="ft-logo logo-light" src="assets/logo/logo.svg" alt="폰드메이커스" width="150" height="22"><img class="ft-logo logo-dark" src="assets/logo/logo-white.svg" alt="폰드메이커스" width="150" height="22">
+        <img class="ft-logo logo-light" src="assets/logo/logo.svg" data-copy-alt="K-20" alt="폰드메이커스" width="150" height="22"><img class="ft-logo logo-dark" src="assets/logo/logo-white.svg" data-copy-alt="K-20" alt="폰드메이커스" width="150" height="22">
         <address>
           <p><span><i data-copy="J-01">대표</i><span data-copy="J-02">박이래</span></span><span><i data-copy="J-03">사업자등록번호</i><span data-copy="J-04">580-87-02446</span></span><span><i data-copy="J-05">주소</i><span data-copy="J-06">대구광역시 달서구 중흥로 3, 3층</span></span></p>
           <p><span><i data-copy="J-07">이메일</i><a href="mailto:contact@pondmakers.com" data-mail data-copy="J-08">contact@pondmakers.com</a></span></p>
@@ -519,7 +543,7 @@ dialog.policy::backdrop { background: var(--scrim); }
   </div>
 </footer>
 
-<button class="top-btn" type="button" id="top-btn" aria-label="맨 위로">TOP</button>
+<button class="top-btn" type="button" id="top-btn" data-copy-aria="K-18" aria-label="맨 위로">TOP</button>
 
 <script src="app.js"></script>
 </body>

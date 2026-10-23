@@ -48,7 +48,7 @@
 
   /* 글꼴 */
   --font-en: "Outfit", "Pretendard Variable", Pretendard, sans-serif;
-  --font-ko: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-ko: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
 
   /* 글자 크기: 원본 65·40·28·22·18·17·16·15·14·13 단계를 화면 폭에 맞춰 줄인다 */
   --t-65: clamp(30px, 4.4vw, 65px);
@@ -118,6 +118,11 @@ button { cursor: pointer; }
 
 .wrap { width: min(var(--wrap), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
 .en { font-family: var(--font-en); }
+/* 일본어: 띄어쓰기가 없어 keep-all이면 줄이 넘친다. 가나·한자는 Pretendard에 없어 시스템 일본어 글꼴로 이어진다 */
+:lang(ja) body, body:lang(ja) { word-break: normal; line-break: strict; overflow-wrap: anywhere; }
+/* 제목은 문절 단위로 끊고(지원하는 브라우저) 줄 길이를 고르게 해 한 글자만 남는 줄을 막는다 */
+:lang(ja) :is(h1, h2, h3, h4, .slide p, .title p) { word-break: auto-phrase; text-wrap: balance; }
+:lang(en) :is(h1, h2, h3) { text-wrap: balance; }
 
 /* 섹션 머리말: 작은 파란 글씨 → 큰 제목 → 설명 */
 .title { text-align: center; }

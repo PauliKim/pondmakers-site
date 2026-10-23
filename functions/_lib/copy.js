@@ -3,20 +3,30 @@
 
 const ELEMENT = /(<(\w+)\b[^>]*\bdata-copy="([A-Z]-\d+)"[^>]*>)((?:[^<]|<br>)*)(<\/\2>)/g;
 const META = /(<meta\b[^>]*\bdata-copy="([A-Z]-\d+)"[^>]*\bcontent=")([^"]*)(")/g;
-const PLACEHOLDER = /(<(?:input|textarea)\b[^>]*\bdata-copy-ph="([A-Z]-\d+)"[^>]*\bplaceholder=")([^"]*)(")/g;
+// 속성 문구: data-copy-ph(placeholder), data-copy-aria(aria-label), data-copy-alt(alt)
+const ATTRS = [["ph", "placeholder"], ["aria", "aria-label"], ["alt", "alt"]].map(([k, a]) => new RegExp(`(<\\w+\\b[^>]*\\bdata-copy-${k}="([A-Z]-\\d+)"[^>]*\\b${a}=")([^"]*)(")`, "g"));
 
 // Python html.escape(quote=True)와 같은 결과
 export const escapeHtml = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
 const toHtml = (text) => text.split("\n").map(escapeHtml).join("<br>");
 
-// index.html 문자열에 문구를 넣는다
+// 페이지(index.html, en/index.html, ja/index.html) 문자열에 문구를 넣는다
 export function applyCopy(page, items) {
   const attr = (all, open, key, value, close) => (key in items ? open + escapeHtml(items[key].replace(/\n/g, " ")) + close : all);
   return page
     .replace(ELEMENT, (all, open, tag, key, inner, close) => (key in items ? open + toHtml(items[key]) + close : all))
     .replace(META, attr)
-    .replace(PLACEHOLDER, attr);
+    .replace(ATTRS[0], attr)
+    .replace(ATTRS[1], attr)
+    .replace(ATTRS[2], attr);
 }
+
+// 언어별 파일. 한국어 index.html이 틀이고 en/, ja/ 페이지는 scripts/apply_copy.py가 만든다.
+export const LANG_FILES = {
+  ko: { copy: "data/copy.json", page: "index.html", label: "한국어" },
+  en: { copy: "data/copy.en.json", page: "en/index.html", label: "영어" },
+  ja: { copy: "data/copy.ja.json", page: "ja/index.html", label: "일본어" }
+};
 
 // 저장 요청을 검사한다. 문제가 있으면 사람이 읽을 수 있는 문장 목록을 돌려준다.
 export function validateItems(items, schema, current) {

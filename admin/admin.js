@@ -1,19 +1,26 @@
 // 폰드메이커스 문구 관리
-// - ../data/copy-schema.json 으로 문구 칸을 그리고, /api/copy 에서 지금 문구를 불러온다(로그인 필요).
-// - 미리보기는 실제 사이트(../?preview=1)를 iframe으로 띄워 window.pondPreview로 저장 전 문구를 넣어 본다.
-// - 저장하면 /api/copy 가 data/copy.json과 index.html을 main에 커밋한다.
+// - ../data/copy-schema.json 으로 문구 칸을 그리고, /api/copy?lang= 에서 고른 언어의 지금 문구를 불러온다(로그인 필요).
+// - 언어는 한국어·영어·일본어. 세 언어가 같은 번호 목록을 쓰고, 파일만 다르다(data/copy.json, copy.en.json, copy.ja.json).
+// - 미리보기는 그 언어의 실제 페이지(../, ../en/, ../ja/ + ?preview=1)를 iframe으로 띄워 window.pondPreview로 저장 전 문구를 넣어 본다.
+// - 저장하면 /api/copy 가 그 언어의 copy 파일과 페이지를 main에 커밋한다.
 (() => {
   "use strict";
   const $ = (s) => document.querySelector(s);
   const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const DRAFT_KEY = "pond-copy-draft";
+  const LANGS = {
+    ko: { label: "한국어", page: "", copy: "../data/copy.json" },
+    en: { label: "영어", page: "en/", copy: "../data/copy.en.json" },
+    ja: { label: "일본어", page: "ja/", copy: "../data/copy.ja.json" }
+  };
+  let lang = (() => { const q = new URLSearchParams(location.search).get("lang"); return q in LANGS ? q : "ko"; })();
+  const draftKey = () => `pond-copy-draft-${lang}`;
   const VIEWS = { pc: { w: 1280, h: 800, label: "PC" }, mobile: { w: 390, h: 844, label: "모바일" } };
 
   let schema = null;          // { groups: [{ id, name, desc, items: [...] }] }
   let defs = new Map();       // id → 항목 정의
   let saved = {};             // 마지막으로 저장된 문구
   let draft = {};             // 지금 고치고 있는 문구
-  let sha = null;             // 저장된 data/copy.json 버전
+  let sha = null;             // 저장된 그 언어 copy 파일 버전
   let canSave = false;
   let activeId = null;
   const view = { device: "pc", theme: "light" };
@@ -36,7 +43,8 @@
       const c = schema.groups.find((g) => g.id === b.dataset.group).items.filter((i) => draft[i.id] !== saved[i.id]).length;
       b.querySelector(".n").textContent = c ? c : "";
     });
-    try { n ? localStorage.setItem(DRAFT_KEY, JSON.stringify({ sha, items: draft })) : localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+    try { n ? localStorage.setItem(draftKey(), JSON.stringify({ sha, items: draft })) : localStorage.removeItem(draftKey()); } catch (e) {}
+    document.querySelectorAll("#seg-lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
   }
 
   // 자리표시 검사: 없는 자리표시는 오류(저장 불가), 원래 있던 자리표시가 빠지면 경고
@@ -101,7 +109,7 @@
     stage.className = `stage ${view.device === "all" ? "all" : "one"}`;
     stage.innerHTML = list.map(([d, th]) => `<div class="frame" data-device="${d}" data-theme="${th}">
         <div class="frame-label">${VIEWS[d].label} · ${th === "light" ? "라이트" : "다크"}</div>
-        <div class="frame-box"><iframe title="${VIEWS[d].label} ${th === "light" ? "라이트" : "다크"} 미리보기" src="../?preview=1" width="${VIEWS[d].w}" height="${VIEWS[d].h}"></iframe></div>
+        <div class="frame-box"><iframe title="${VIEWS[d].label} ${th === "light" ? "라이트" : "다크"} 미리보기" src="../${LANGS[lang].page}?preview=1" width="${VIEWS[d].w}" height="${VIEWS[d].h}"></iframe></div>
       </div>`).join("");
     frames = [...stage.querySelectorAll(".frame")].map((el) => ({ el, iframe: el.querySelector("iframe"), device: el.dataset.device, theme: el.dataset.theme }));
     frames.forEach((f) => f.iframe.addEventListener("load", () => prepareFrame(f)));
@@ -205,13 +213,13 @@
     if ($("#confirm").returnValue !== "ok") return;
     $("#save").disabled = true; $("#status").textContent = "저장하는 중";
     try {
-      const res = await fetch("../api/copy", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ items: draft, sha }) });
+      const res = await fetch("../api/copy", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ lang, items: draft, sha }) });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error([body.error || `저장하지 못했습니다(${res.status}).`, ...(body.details || [])].join(" "));
       saved = { ...draft }; sha = body.sha;
-      try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+      try { localStorage.removeItem(draftKey()); } catch (e) {}
       renderFields();
-      notice(`저장했습니다${body.changed?.length ? `(${body.changed.length}개)` : ""}. 1~2분 뒤 운영 사이트에 반영됩니다.${body.note ? ` ${body.note}` : ""}`, "ok");
+      notice(`${LANGS[lang].label} 문구를 저장했습니다${body.changed?.length ? `(${body.changed.length}개)` : ""}. 1~2분 뒤 운영 사이트에 반영됩니다.${body.note ? ` ${body.note}` : ""}`, "ok");
     } catch (e) {
       notice(e.message, "error");
     }
@@ -219,29 +227,46 @@
   });
 
   // ---------- 시작 ----------
-  async function start() {
-    schema = await fetch("../data/copy-schema.json", { cache: "no-store" }).then((r) => r.json());
-    defs = new Map(schema.groups.flatMap((g) => g.items.map((i) => [i.id, i])));
+  // 언어 바꾸기: 고치던 문구는 언어마다 이 브라우저에 따로 남아 있다가 돌아오면 이어서 불러온다
+  $("#seg-lang").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-lang]"); if (!b || b.dataset.lang === lang) return;
+    lang = b.dataset.lang;
+    const u = new URL(location.href); u.searchParams.set("lang", lang); history.replaceState(null, "", u);
+    notice("");
+    loadLang().catch((err) => notice(`문구를 불러오지 못했습니다: ${err.message}`, "error"));
+  });
+
+  async function loadLang() {
+    canSave = false; $("#status").textContent = "불러오는 중";
+    $("#fields").setAttribute("lang", lang);
     try {
-      const res = await fetch("../api/copy", { cache: "no-store" });
+      const res = await fetch(`../api/copy?lang=${lang}`, { cache: "no-store" });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error || `저장 서버에 연결하지 못했습니다(${res.status}).`);
       saved = body.copy.items; sha = body.sha; canSave = true;
       $("#who").textContent = body.email;
     } catch (e) {
       // 로그인이나 서버 설정이 없을 때: 공개된 문구로 미리보기만 할 수 있다
-      saved = (await fetch("../data/copy.json", { cache: "no-store" }).then((r) => r.json())).items;
+      saved = (await fetch(LANGS[lang].copy, { cache: "no-store" }).then((r) => r.json())).items;
+      sha = null;
       notice(`미리보기만 할 수 있습니다. ${e.message}`, "error");
     }
     draft = { ...saved };
     try {
-      const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+      const d = JSON.parse(localStorage.getItem(draftKey()) || "null");
       if (d && d.sha === sha && d.items) {
         const restored = Object.keys(d.items).filter((k) => defs.has(k) && d.items[k] !== saved[k]);
-        if (restored.length) { restored.forEach((k) => (draft[k] = d.items[k])); notice(`저장하지 않은 문구 ${restored.length}개를 이어서 불러왔습니다. 필요 없으면 '모두 되돌리기'를 누르세요.`); }
+        if (restored.length) { restored.forEach((k) => (draft[k] = d.items[k])); notice(`${LANGS[lang].label}: 저장하지 않은 문구 ${restored.length}개를 이어서 불러왔습니다. 필요 없으면 '모두 되돌리기'를 누르세요.`); }
       }
     } catch (e) {}
-    renderNav(); renderFields(); buildStage(); refreshStatus();
+    renderFields(); buildStage(); refreshStatus();
+  }
+
+  async function start() {
+    schema = await fetch("../data/copy-schema.json", { cache: "no-store" }).then((r) => r.json());
+    defs = new Map(schema.groups.flatMap((g) => g.items.map((i) => [i.id, i])));
+    renderNav();
+    await loadLang();
   }
   start().catch((e) => notice(`문구 목록을 불러오지 못했습니다: ${e.message}`, "error"));
 })();

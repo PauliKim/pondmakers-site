@@ -1,8 +1,13 @@
 // 폰드메이커스 홈페이지 — 첫 화면 슬라이드, 숫자 세기, 문화기술 장면 전환, 뉴스 목록(data/news.json), 문의 보내기.
-// 고정 문구는 data/copy.json에 번호(C-01 등)로 있다. 어드민(/admin) 미리보기는 window.pondPreview로 문구를 바꿔 본다.
+// 고정 문구는 data/copy.json(영어 copy.en.json, 일본어 copy.ja.json)에 번호(C-01 등)로 있다. 어드민(/admin) 미리보기는 window.pondPreview로 문구를 바꿔 본다.
+// en/, ja/ 페이지는 <html data-lang data-root="../">로 자기 언어와 사이트 맨 위 경로를 알려 준다.
 (() => {
   "use strict";
   const $ = (s) => document.querySelector(s);
+  const LANG = document.documentElement.dataset.lang || "ko";
+  const ROOT = document.documentElement.dataset.root || "";
+  const LOCALE = { ko: "ko-KR", en: "en-US", ja: "ja-JP" }[LANG] || "ko-KR";
+  const isRelative = (u) => !/^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(u);
   const $$ = (s) => [...document.querySelectorAll(s)];
   const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -31,7 +36,10 @@
       else if (el.tagName === "TITLE") document.title = COPY[id];
       else el.innerHTML = et(id);
     });
-    $$("[data-copy-ph]").forEach((el) => { const id = el.dataset.copyPh; if (id in COPY) el.placeholder = COPY[id].replace(/\n/g, " "); });
+    const attr = (sel, key, name) => $$(sel).forEach((el) => { const id = el.dataset[key]; if (id in COPY) el.setAttribute(name, COPY[id].replace(/\n/g, " ")); });
+    attr("[data-copy-ph]", "copyPh", "placeholder");
+    attr("[data-copy-aria]", "copyAria", "aria-label");
+    attr("[data-copy-alt]", "copyAlt", "alt");
     $$("[data-mail]").forEach((el) => (el.href = `mailto:${mail()}`));
     marquee();
     countAll(true);
@@ -48,10 +56,22 @@
     tech();
   };
   addEventListener("scroll", onScroll, { passive: true });
-  const menu = (open) => { document.body.classList.toggle("menu-open", open); $("#menu-btn").setAttribute("aria-expanded", String(open)); $("#menu-btn").setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기"); };
+  const menu = (open) => { document.body.classList.toggle("menu-open", open); $("#menu-btn").setAttribute("aria-expanded", String(open)); const label = t(open ? "K-05" : "K-04"); if (label) $("#menu-btn").setAttribute("aria-label", label); };
   $("#menu-btn").addEventListener("click", () => menu(!document.body.classList.contains("menu-open")));
   $("#gnb").addEventListener("click", (e) => { if (e.target.closest("a")) menu(false); });
   $("#top-btn").addEventListener("click", () => scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" }));
+
+  // 언어 선택: 고른 언어를 쿠키(lang)에 남겨 두면 첫 화면(/)의 나라별 자동 이동보다 앞선다(functions/_middleware.js)
+  const langBtn = $("#lang-btn"), langList = $("#lang-list");
+  const langOpen = (open) => { langList.hidden = !open; langBtn.setAttribute("aria-expanded", String(open)); };
+  $("#lang-now").textContent = { ko: "KO", en: "EN", ja: "JP" }[LANG];
+  langList.querySelectorAll("a").forEach((a) => {
+    if (a.dataset.langLink === LANG) a.setAttribute("aria-current", "true");
+    a.addEventListener("click", () => { try { document.cookie = `lang=${a.dataset.langLink}; path=/; max-age=31536000; samesite=lax`; } catch (e) {} });
+  });
+  langBtn.addEventListener("click", (e) => { e.stopPropagation(); langOpen(langList.hidden); });
+  document.addEventListener("click", (e) => { if (!e.target.closest("#lang")) langOpen(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !langList.hidden) { langOpen(false); langBtn.focus(); } });
   // 지금 보고 있는 구역의 메뉴에 표시
   const navIO = new IntersectionObserver((list) => list.forEach((en) => {
     if (en.isIntersecting) $$("#gnb a").forEach((a) => a.classList.toggle("on", a.getAttribute("href") === `#${en.target.id}`));
@@ -90,7 +110,7 @@
       const end = Number(m[1].replace(/,/g, "")), rest = m[2], start = performance.now(), dur = 1600;
       const step = (now) => {
         const p = Math.min(1, (now - start) / dur);
-        el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))).toLocaleString("ko-KR") + rest;
+        el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))).toLocaleString(LOCALE) + rest;
         if (p < 1) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
@@ -116,7 +136,8 @@
   let NEWS = [];
   function renderNews() {
     const box = $("#news");
-    box.innerHTML = NEWS.length ? NEWS.map((n) => `<div class="news-item"><a href="${esc(n.url || "#section05")}"${n.url ? ' target="_blank" rel="noopener"' : ""}><img src="${esc(n.image)}" alt="${esc(n.alt || n.title)}" loading="lazy" draggable="false"><strong>${esc(n.title)}</strong></a></div>`).join("")
+    const at = (u) => (isRelative(u) ? ROOT + u : u);
+    box.innerHTML = NEWS.length ? NEWS.map((n) => `<div class="news-item"><a href="${esc(n.url ? at(n.url) : "#section05")}"${n.url ? ' target="_blank" rel="noopener"' : ""}><img src="${esc(at(n.image))}" alt="${esc(n.alt || n.title)}" loading="lazy" draggable="false"><strong>${esc(n.title)}</strong></a></div>`).join("")
       : `<p class="news-empty" data-copy-dyn="G-04">${et("G-04")}</p>`;
     // 링크가 없는 뉴스는 눌러도 움직이지 않는다
     box.querySelectorAll('a[href="#section05"]').forEach((a) => a.addEventListener("click", (e) => e.preventDefault()));
@@ -143,7 +164,7 @@
   if (siteKey) {
     // Cloudflare Turnstile: 사이트 키가 있을 때만 불러온다
     const box = $("#captcha"); box.hidden = false;
-    window.onTurnstileLoad = () => window.turnstile.render(box, { sitekey: siteKey, theme: "dark", language: "ko" });
+    window.onTurnstileLoad = () => window.turnstile.render(box, { sitekey: siteKey, theme: "dark", language: LANG });
     const s = document.createElement("script");
     s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"; s.async = true;
     document.head.appendChild(s);
@@ -168,7 +189,8 @@
     data.type = $("#q-type").value;
     const btn = $("#q-submit"); btn.disabled = true; msg(et("H-28"));
     try {
-      const res = await fetch("api/contact", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(data) });
+      data.lang = LANG;
+      const res = await fetch(ROOT + "api/contact", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(data) });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error || res.status);
       form.reset(); window.turnstile?.reset();
@@ -176,7 +198,7 @@
     } catch (err) {
       // 서버 설정 전이거나 실패하면 메일로 보내도록 안내한다(입력한 내용을 담은 메일 쓰기 링크)
       const subject = `[${data.type}] ${data.name || ""}`;
-      const lines = [`문의 항목: ${data.type}`, `성함: ${data.name}`, `연락처: ${data.phone}`, `이메일: ${data.email}`, "", data.message];
+      const lines = [`${t("H-09")}: ${data.type}`, `${t("H-13")}: ${data.name}`, `${t("H-15")}: ${data.phone}`, `${t("H-17")}: ${data.email}`, "", data.message];
       const href = `mailto:${mail()}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
       msg(et("H-25", { mail: `__MAIL__` }).replace("__MAIL__", `<a href="${esc(href)}">${esc(mail())}</a>`));
     } finally {
@@ -185,8 +207,8 @@
   });
 
   // ---------- 시작 ----------
-  const loadCopy = fetch("data/copy.json").then((r) => (r.ok ? r.json() : null)).then((c) => { if (c) { COPY = c.items; applyStatic(); } }).catch(() => {});
-  const loadNews = fetch("data/news.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }).then((j) => { NEWS = j.news || []; }).catch(() => { NEWS = []; });
+  const loadCopy = fetch(ROOT + (LANG === "ko" ? "data/copy.json" : `data/copy.${LANG}.json`)).then((r) => (r.ok ? r.json() : null)).then((c) => { if (c) { COPY = c.items; applyStatic(); } }).catch(() => {});
+  const loadNews = fetch(ROOT + "data/news.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }).then((j) => { NEWS = j.news || []; }).catch(() => { NEWS = []; });
   let ready = false;
   Promise.all([loadCopy, loadNews]).then(() => {
     renderNews(); onScroll();
@@ -208,7 +230,7 @@
       if (id.startsWith("I-")) { if (!dlg.open) dlg.showModal(); } else if (dlg.open) dlg.close();
       if (id.startsWith("H-2") && ["H-24", "H-25", "H-26", "H-27", "H-28"].includes(id)) msg(et(id, { field: t("H-13"), mail: mail() }));
       $$("[data-reveal]").forEach((el) => el.classList.add("in"));
-      return $$(`[data-copy="${id}"], [data-copy-dyn="${id}"], [data-copy-ph="${id}"], #form-msg`).filter((el) => (el.id !== "form-msg" || /^H-2[4-8]$/.test(id)) && (el.offsetParent || el.closest("dialog[open]") || el.closest(".tech-col")));
+      return $$(`[data-copy="${id}"], [data-copy-dyn="${id}"], [data-copy-ph="${id}"], [data-copy-aria="${id}"], [data-copy-alt="${id}"], #form-msg`).filter((el) => (el.id !== "form-msg" || /^H-2[4-8]$/.test(id)) && (el.offsetParent || el.closest("dialog[open]") || el.closest(".tech-col")));
     }
   };
 })();

@@ -76,6 +76,7 @@ body { display: flex; flex-direction: column; background: var(--surface); font-s
 .seg button { font: 600 var(--t-13)/1 var(--font-ui); padding: 8px 14px; border: 0; border-radius: var(--radius-pill); background: none; color: var(--text); cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
 .seg.off { opacity: .4; pointer-events: none; }
+.seg-lang { justify-self: start; }
 .open-live { margin-left: auto; font-size: var(--t-13); color: var(--accent); }
 .stage { flex: 1; min-height: 0; display: grid; gap: 14px; }
 .stage.one { grid-template: 1fr / 1fr; }

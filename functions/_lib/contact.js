@@ -18,11 +18,13 @@ export function validateContact(d) {
   return errors;
 }
 
+const LANG_NAMES = { ko: "한국어", en: "영어(EN)", ja: "일본어(JP)" };
+
 // 받는 사람에게 갈 메일 제목과 본문
 export function contactMail(d) {
   const one = (s) => String(s).replace(/[\r\n]+/g, " ").trim();
   return {
-    subject: `[홈페이지 문의] ${one(d.type)} - ${one(d.name)}`,
-    text: [`문의 항목: ${one(d.type)}`, `성함: ${one(d.name)}`, `연락처: ${one(d.phone)}`, `이메일: ${one(d.email)}`, "", String(d.message).trim(), "", "— pondmakers.com 문의 양식에서 보냄"].join("\n")
+    subject: `[홈페이지 문의${{ en: " EN", ja: " JP" }[d.lang] || ""}] ${one(d.type)} - ${one(d.name)}`,
+    text: [`문의 항목: ${one(d.type)}`, `성함: ${one(d.name)}`, `연락처: ${one(d.phone)}`, `이메일: ${one(d.email)}`, `페이지 언어: ${LANG_NAMES[d.lang] || LANG_NAMES.ko}`, "", String(d.message).trim(), "", "— pondmakers.com 문의 양식에서 보냄"].join("\n")
   };
 }

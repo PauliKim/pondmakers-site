@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.pondmakers.com/</loc></url>
+  <url><loc>https://www.pondmakers.com/en/</loc></url>
+  <url><loc>https://www.pondmakers.com/ja/</loc></url>
   <url><loc>https://www.pondmakers.com/policy/privacy.html</loc></url>
   <url><loc>https://www.pondmakers.com/policy/email.html</loc></url>
 </urlset>
