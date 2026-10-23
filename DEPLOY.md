@@ -28,9 +28,9 @@ Claude Code·어드민에서 수정 → GitHub main에 커밋
    - Framework preset: **None**, Build command: **비워 둠**, Build output directory: `/`
 5. **Save and Deploy** → 1분 뒤 `https://pondmakers.pages.dev`에서 확인
 
-## 3단계. 문구 관리 화면(/admin) 켜기
+## 3단계. 문구 관리 화면(/admin) 켜기 (완료)
 
-지금 상태(2026-10-23): Access 애플리케이션 `폰드메이커스 문구 관리`(pondmakers.pages.dev/admin, /api/copy, 정책 `문구 관리 허용`, 팀 `forrestlive.cloudflareaccess.com`)와 Pages 변수 `ACCESS_TEAM_DOMAIN`, `ACCESS_AUD`, `ADMIN_EMAILS`는 넣어 두었습니다. **남은 것은 `GITHUB_TOKEN`(3-1에서 만들어 Secret으로) 하나**입니다.
+지금 상태: Access 애플리케이션 `폰드메이커스 문구 관리`(pondmakers.pages.dev/admin, /api/copy, 정책 `문구 관리 허용`, 팀 `forrestlive.cloudflareaccess.com`), Pages 변수 `ACCESS_TEAM_DOMAIN`, `ACCESS_AUD`, `ADMIN_EMAILS`, Secret `GITHUB_TOKEN`(fine-grained `pondmakers-admin`, pondmakers-site Contents 읽기·쓰기, 1년 만료 — 만료 전에 새로 만들어 바꿈). **저장 확인 완료(2026-10-24)**: E-01을 바꿔 저장 → `pondmakers-admin` 커밋 2개(copy.json, index.html) → 약 25초 뒤 운영 반영 → 원래 문구로 되돌려 다시 저장.
 
 `https://pondmakers.pages.dev/admin/`에서 문구를 고치고 미리 본 뒤 저장하면 `data/copy.json`과 `index.html`이 main에 커밋됩니다. 설정 전에도 화면과 미리보기는 되지만 저장 버튼은 꺼져 있습니다.
 
