@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m http.server:*)",
+      "Bash(python3 tests/test_copy.py)",
+      "Bash(python3 scripts/apply_copy.py:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git pull:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.dev.vars)"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+# Cloudflare Pages 응답 헤더 설정 (https://developers.cloudflare.com/pages/configuration/headers/)
+# 문구·뉴스 데이터: 1분만 캐시해서 어드민 저장이 빨리 보이게
+/data/*
+  Cache-Control: public, max-age=60, must-revalidate
+
+# 글꼴: 바뀌지 않으므로 1년 캐시
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 공개할 필요 없는 운영 파일은 검색에 노출하지 않음
+/scripts/*
+  X-Robots-Tag: noindex
+/tests/*
+  X-Robots-Tag: noindex
+
+# 문구 관리 화면: 검색에 노출하지 않고, 늘 새 파일을 받는다
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/functions/*
+  X-Robots-Tag: noindex

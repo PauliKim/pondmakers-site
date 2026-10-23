@@ -1,0 +1,110 @@
+/* 폰드메이커스 디자인 토큰과 공통 구성 요소. 토큰 설명은 DESIGN.md
+   값은 기존 pondmakers.com(그누보드 테마 site-custom.css)의 :root를 그대로 옮겼다. */
+@import url("assets/fonts/pretendard.css");
+@import url("assets/fonts/outfit.css");
+
+:root {
+  /* 색 */
+  --c-primary: #1F30FF;      /* 포인트 파랑 */
+  --c-second: #2999FF;       /* 하늘 파랑 */
+  --c-navy: #16182B;         /* 어두운 바탕(문의, 그라데이션 시작) */
+  --c-logo: #163B8D;         /* 로고 글자색 */
+  --gradient: linear-gradient(180deg, #16182B 20%, #1F30FF 55%, #2999FF 75%, #FFF 100%);
+  --gradient-up: linear-gradient(0deg, #16182B 20%, #1F30FF 55%, #2999FF 75%, #FFF 100%);
+  --sky: linear-gradient(0deg, #FFF 0%, #E7F1FB 100%);   /* 첫 화면 바탕 */
+
+  --title: #131822;          /* 제목 */
+  --text: #666666;           /* 본문 */
+  --muted: #90A0AF;          /* 흐린 글자 */
+  --bg: #FFFFFF;
+  --bg-light: #F0F5FA;
+  --wave: #E3EFFB;           /* 첫 화면 물결 선 */
+  --line: #E1E1E1;
+  --line-soft: #EEEEEE;
+  --w: #FFFFFF;
+  --w-60: rgba(255, 255, 255, .6);
+  --w-30: rgba(255, 255, 255, .3);
+  --w-10: rgba(255, 255, 255, .1);
+  --b-10: rgba(0, 0, 0, .1);
+  --shadow: 0 10px 40px rgba(19, 24, 34, .08);
+  --focus: #2999FF;
+
+  /* 글꼴 */
+  --font-en: "Outfit", "Pretendard Variable", Pretendard, sans-serif;
+  --font-ko: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  /* 글자 크기: 원본 65·40·28·22·18·17·16·15·14·13 단계를 화면 폭에 맞춰 줄인다 */
+  --t-65: clamp(30px, 4.4vw, 65px);
+  --t-40: clamp(24px, 2.8vw, 40px);
+  --t-28: clamp(20px, 1.95vw, 28px);
+  --t-22: clamp(18px, 1.55vw, 22px);
+  --t-18: clamp(15px, 1.25vw, 18px);
+  --t-17: 17px;
+  --t-16: 16px;
+  --t-15: 15px;
+  --t-14: 14px;
+  --t-13: 13px;
+
+  /* 간격·모서리 */
+  --wrap: 1400px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --space-xl: clamp(100px, 13vw, 200px);
+  --space-lg: clamp(70px, 8vw, 140px);
+  --space-md: clamp(40px, 5vw, 80px);
+  --r-20: 20px;
+  --r-30: clamp(20px, 2vw, 30px);
+  --r-40: clamp(24px, 2.8vw, 40px);
+  --r-pill: 999px;
+
+  --ease: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --header-h: 84px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 var(--t-17)/1.6 var(--font-en); font-family: var(--font-en); word-break: keep-all; overflow-x: hidden; }
+body, input, textarea, button, select { font-family: "Outfit", "Pretendard Variable", Pretendard, sans-serif; }
+h1, h2, h3, h4, h5, h6 { margin: 0; color: var(--title); }
+p, dl, dd, ul, ol, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 16px; top: -60px; z-index: 100; background: var(--title); color: var(--w); padding: 10px 16px; border-radius: var(--r-pill); }
+.skip:focus { top: 12px; }
+
+.wrap { width: min(var(--wrap), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
+.en { font-family: var(--font-en); }
+
+/* 섹션 머리말: 작은 파란 글씨 → 큰 제목 → 설명 */
+.title { text-align: center; }
+.title .eyebrow { display: block; font: 500 var(--t-16)/1.4 var(--font-ko); color: var(--c-primary); margin-bottom: 14px; }
+.title h2 { font: 700 var(--t-65)/1.3 var(--font-ko); letter-spacing: -0.02em; }
+.title p { margin-top: 24px; font-size: var(--t-18); }
+.on-dark, .on-dark h2, .on-dark h3, .on-dark .eyebrow { color: var(--w); }
+
+/* 반짝이 장식(원본 ic-star) */
+.deco { position: absolute; inset: 0; pointer-events: none; }
+.deco i { position: absolute; width: 29px; height: 29px; background: url(assets/img/ic-star.svg) center/contain no-repeat; animation: twinkle 3s ease-in-out infinite; }
+.deco i.s { width: 16px; height: 16px; animation-delay: 1.2s; }
+.deco.white i { background-image: url(assets/img/ic-star_w.svg); }
+@keyframes twinkle { 50% { transform: scale(.7) rotate(45deg); opacity: .6; } }
+
+/* 버튼 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: var(--r-pill); border: 0; font: 600 var(--t-16)/1 var(--font-ko); background: var(--w); color: var(--title); transition: transform .3s var(--ease), background .3s; }
+.btn::after { content: ""; width: 20px; height: 20px; background: url(assets/img/arrow-basic.svg) center/contain no-repeat; transition: transform .3s var(--ease); }
+.btn:hover::after { transform: translateX(4px); }
+.btn-primary { background: var(--c-primary); color: var(--w); }
+.btn-primary::after { background-image: url(assets/img/arrow-basic_w.svg); }
+.btn-circle { width: 52px; padding: 0; }
+
+/* 나타나는 움직임 */
+[data-reveal] { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+[data-reveal].in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .deco i, .marquee ul { animation: none !important; }
+}

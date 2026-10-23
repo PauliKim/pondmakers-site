@@ -1,0 +1,17 @@
+{
+ "_설명": "뉴스 카드 목록. 위에 있는 것이 먼저 나온다. image는 assets/news/에 넣은 파일. url을 넣으면 카드를 눌렀을 때 새 창으로 열린다(비우면 눌러도 움직이지 않음).",
+ "news": [
+  { "title": "Rolling Quartz", "image": "assets/news/rolling-quartz.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "can't be blue", "image": "assets/news/cant-be-blue.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "Kardi", "image": "assets/news/kardi.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "UINONE", "image": "assets/news/uinone.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "Band GIFT", "image": "assets/news/band-gift.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "Far East Asian Tigers", "image": "assets/news/far-east-asian-tigers.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "UNXL", "image": "assets/news/unxl.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "NINA PARK", "image": "assets/news/nina-park.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "Yang Jeonghoon", "image": "assets/news/yang-jeonghoon.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "YEWON", "image": "assets/news/yewon.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "Tejong", "image": "assets/news/tejong.jpg", "date": "2026-02-27", "url": "" },
+  { "title": "Juniel", "image": "assets/news/juniel.jpg", "date": "2026-02-27", "url": "" }
+ ]
+}
