@@ -30,6 +30,8 @@ Claude Code·어드민에서 수정 → GitHub main에 커밋
 
 ## 3단계. 문구 관리 화면(/admin) 켜기
 
+지금 상태(2026-10-23): Access 애플리케이션 `폰드메이커스 문구 관리`(pondmakers.pages.dev/admin, /api/copy, 정책 `문구 관리 허용`, 팀 `forrestlive.cloudflareaccess.com`)와 Pages 변수 `ACCESS_TEAM_DOMAIN`, `ACCESS_AUD`, `ADMIN_EMAILS`는 넣어 두었습니다. **남은 것은 `GITHUB_TOKEN`(3-1에서 만들어 Secret으로) 하나**입니다.
+
 `https://pondmakers.pages.dev/admin/`에서 문구를 고치고 미리 본 뒤 저장하면 `data/copy.json`과 `index.html`이 main에 커밋됩니다. 설정 전에도 화면과 미리보기는 되지만 저장 버튼은 꺼져 있습니다.
 
 ### 3-1. GitHub 토큰
@@ -62,6 +64,8 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 값을 넣은 뒤 **Deployments → 맨 위 배포 → Retry deployment**.
 
 ## 4단계. 문의 메일 켜기
+
+지금 상태(2026-10-23): Turnstile 위젯 `폰드메이커스 문의 양식`(pondmakers.pages.dev, pondmakers.com)을 만들고 사이트 키를 index.html에 넣었습니다. **남은 것은 Resend 가입·도메인 인증과 `RESEND_API_KEY`, `CONTACT_FROM`, `TURNSTILE_SECRET` 입력**입니다. 비밀 키를 넣기 전까지 서버는 Turnstile 확인을 건너뜁니다.
 
 문의 양식은 `functions/api/contact.js`가 메일로 보냅니다(Resend 사용, 월 3,000통 무료). 설정 전에는 "contact@pondmakers.com로 메일을 보내 주세요"라는 안내와, 입력한 내용이 담긴 메일 쓰기 링크가 나옵니다.
 
