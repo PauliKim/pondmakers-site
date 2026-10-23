@@ -1,33 +1,50 @@
-/* 폰드메이커스 디자인 토큰과 공통 구성 요소. 토큰 설명은 DESIGN.md
-   값은 기존 pondmakers.com(그누보드 테마 site-custom.css)의 :root를 그대로 옮겼다. */
+/* 폰드메이커스 디자인 토큰과 공통 구성 요소.
+   기준: Claude Design의 '폰드메이커스' 디자인 시스템(https://claude.ai/artifact/JE6k6ucpHfAk7YcjrxkWVz).
+   라이트 값은 예전 pondmakers.com 테마 값 그대로, 다크 값은 그 시스템에서 새로 정의했다. 값을 바꾸면 그쪽 tokens.json과 함께 바꾼다. */
 @import url("assets/fonts/pretendard.css");
 @import url("assets/fonts/outfit.css");
 
 :root {
-  /* 색 */
-  --c-primary: #1F30FF;      /* 포인트 파랑 */
-  --c-second: #2999FF;       /* 하늘 파랑 */
-  --c-navy: #16182B;         /* 어두운 바탕(문의, 그라데이션 시작) */
-  --c-logo: #163B8D;         /* 로고 글자색 */
-  --gradient: linear-gradient(180deg, #16182B 20%, #1F30FF 55%, #2999FF 75%, #FFF 100%);
-  --gradient-up: linear-gradient(0deg, #16182B 20%, #1F30FF 55%, #2999FF 75%, #FFF 100%);
-  --sky: linear-gradient(0deg, #FFF 0%, #E7F1FB 100%);   /* 첫 화면 바탕 */
+  /* 원색 */
+  --primary: #1F30FF;
+  --second: #2999FF;
+  --cyan: #7BE6FF;
+  --navy: #16182B;
+  --logo-ink: #163B8D;
 
-  --title: #131822;          /* 제목 */
-  --text: #666666;           /* 본문 */
-  --muted: #90A0AF;          /* 흐린 글자 */
+  /* 쓰임(라이트) */
+  --accent: var(--primary);
+  --on-accent: #FFFFFF;
   --bg: #FFFFFF;
-  --bg-light: #F0F5FA;
-  --wave: #E3EFFB;           /* 첫 화면 물결 선 */
+  --surface: #F0F5FA;
+  --card: #FFFFFF;
+  --title: #131822;
+  --text: #666666;
+  --muted: #90A0AF;          /* 2.7:1 — 읽어야 하는 글자에는 쓰지 않는다 */
   --line: #E1E1E1;
   --line-soft: #EEEEEE;
-  --w: #FFFFFF;
-  --w-60: rgba(255, 255, 255, .6);
-  --w-30: rgba(255, 255, 255, .3);
-  --w-10: rgba(255, 255, 255, .1);
-  --b-10: rgba(0, 0, 0, .1);
-  --shadow: 0 10px 40px rgba(19, 24, 34, .08);
+  --sky: #E7F1FB;
+  --wave: #E3EFFB;
+  --star: #131822;
+  --icon-ground: #F0F5FA;    /* 두 색 아이콘(ic-about) 바탕 원 */
+  --inverse: #16182B;        /* 테마와 상관없이 어두운 구역(문의) */
+  --on-inverse: #FFFFFF;
+  --on-inverse-muted: rgba(255, 255, 255, .6);
+  --on-inverse-accent: var(--second);
+  --on-inverse-line: rgba(255, 255, 255, .1);
+  --glass: rgba(255, 255, 255, .92);
+  --scrim: rgba(22, 24, 43, .6);
+  --photo-shade: rgba(0, 0, 0, .6);
   --focus: #2999FF;
+  --shadow-float: 0 10px 40px rgba(19, 24, 34, .08);
+  --shadow-card: 0 20px 50px rgba(0, 0, 0, .12);
+  --logo-light: block;       /* 밝은 로고/흰 로고 중 무엇을 보일지 */
+  --logo-dark: none;
+
+  /* 그라데이션: 끝색이 bg라 테마에 따라 흰색/밤색으로 녹아든다 */
+  --gradient: linear-gradient(180deg, var(--navy) 20%, var(--primary) 55%, var(--second) 75%, var(--bg) 100%);
+  --gradient-up: linear-gradient(0deg, var(--navy) 20%, var(--primary) 55%, var(--second) 75%, var(--bg) 100%);
+  --sky-fade: linear-gradient(0deg, var(--bg) 0%, var(--sky) 100%);
 
   /* 글꼴 */
   --font-en: "Outfit", "Pretendard Variable", Pretendard, sans-serif;
@@ -51,13 +68,37 @@
   --space-xl: clamp(100px, 13vw, 200px);
   --space-lg: clamp(70px, 8vw, 140px);
   --space-md: clamp(40px, 5vw, 80px);
-  --r-20: 20px;
-  --r-30: clamp(20px, 2vw, 30px);
-  --r-40: clamp(24px, 2.8vw, 40px);
-  --r-pill: 999px;
+  --radius-20: 20px;
+  --radius-30: clamp(20px, 2vw, 30px);
+  --radius-40: clamp(24px, 2.8vw, 40px);
+  --radius-pill: 999px;
 
   --ease: cubic-bezier(0.215, 0.61, 0.355, 1);
   --header-h: 84px;
+}
+
+/* 다크 테마: 시스템 설정을 따르고, data-theme으로 덮어쓴다(어드민 미리보기) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --accent: #7D8AFF; --on-accent: #0E1020;
+    --bg: #0E1020; --surface: #171A2E; --card: #1C1F36;
+    --title: #F1F4FA; --text: #AEB6C6; --muted: #7F8AA0;
+    --line: #2A2E48; --line-soft: #22263D; --sky: #141A36; --wave: #1B2347; --star: #F1F4FA; --icon-ground: #DCE6F5;
+    --glass: rgba(28, 31, 54, .9); --scrim: rgba(0, 0, 0, .6); --focus: #7D8AFF;
+    --shadow-float: 0 10px 40px rgba(0, 0, 0, .4); --shadow-card: 0 20px 50px rgba(0, 0, 0, .35);
+    --logo-light: none; --logo-dark: block;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --accent: #7D8AFF; --on-accent: #0E1020;
+  --bg: #0E1020; --surface: #171A2E; --card: #1C1F36;
+  --title: #F1F4FA; --text: #AEB6C6; --muted: #7F8AA0;
+  --line: #2A2E48; --line-soft: #22263D; --sky: #141A36; --wave: #1B2347; --star: #F1F4FA; --icon-ground: #DCE6F5;
+  --glass: rgba(28, 31, 54, .9); --scrim: rgba(0, 0, 0, .6); --focus: #7D8AFF;
+  --shadow-float: 0 10px 40px rgba(0, 0, 0, .4); --shadow-card: 0 20px 50px rgba(0, 0, 0, .35);
+  --logo-light: none; --logo-dark: block;
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -72,7 +113,7 @@ a { color: inherit; text-decoration: none; }
 button { cursor: pointer; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.skip { position: absolute; left: 16px; top: -60px; z-index: 100; background: var(--title); color: var(--w); padding: 10px 16px; border-radius: var(--r-pill); }
+.skip { position: absolute; left: 16px; top: -60px; z-index: 100; background: var(--title); color: var(--bg); padding: 10px 16px; border-radius: var(--radius-pill); }
 .skip:focus { top: 12px; }
 
 .wrap { width: min(var(--wrap), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
@@ -80,24 +121,27 @@ button { cursor: pointer; }
 
 /* 섹션 머리말: 작은 파란 글씨 → 큰 제목 → 설명 */
 .title { text-align: center; }
-.title .eyebrow { display: block; font: 500 var(--t-16)/1.4 var(--font-ko); color: var(--c-primary); margin-bottom: 14px; }
+.title .eyebrow { display: block; font: 500 var(--t-16)/1.4 var(--font-ko); color: var(--accent); margin-bottom: 14px; }
 .title h2 { font: 700 var(--t-65)/1.3 var(--font-ko); letter-spacing: -0.02em; }
 .title p { margin-top: 24px; font-size: var(--t-18); }
-.on-dark, .on-dark h2, .on-dark h3, .on-dark .eyebrow { color: var(--w); }
+.on-dark, .on-dark h2, .on-dark h3 { color: var(--on-inverse); }
+.on-dark .eyebrow { color: var(--on-inverse-accent); }
+/* 로고: 테마에 맞는 한 벌만 보인다 */
+.logo-light { display: var(--logo-light); }
+.logo-dark { display: var(--logo-dark); }
 
 /* 반짝이 장식(원본 ic-star) */
 .deco { position: absolute; inset: 0; pointer-events: none; }
-.deco i { position: absolute; width: 29px; height: 29px; background: url(assets/img/ic-star.svg) center/contain no-repeat; animation: twinkle 3s ease-in-out infinite; }
+.deco i { position: absolute; width: 29px; height: 29px; background: var(--star); -webkit-mask: url(assets/img/ic-star.svg) center/contain no-repeat; mask: url(assets/img/ic-star.svg) center/contain no-repeat; animation: twinkle 3s ease-in-out infinite; }
 .deco i.s { width: 16px; height: 16px; animation-delay: 1.2s; }
-.deco.white i { background-image: url(assets/img/ic-star_w.svg); }
+.deco.white i { background: var(--on-inverse); }
 @keyframes twinkle { 50% { transform: scale(.7) rotate(45deg); opacity: .6; } }
 
 /* 버튼 */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: var(--r-pill); border: 0; font: 600 var(--t-16)/1 var(--font-ko); background: var(--w); color: var(--title); transition: transform .3s var(--ease), background .3s; }
-.btn::after { content: ""; width: 20px; height: 20px; background: url(assets/img/arrow-basic.svg) center/contain no-repeat; transition: transform .3s var(--ease); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: var(--radius-pill); border: 0; font: 600 var(--t-16)/1 var(--font-ko); background: var(--card); color: var(--title); transition: transform .3s var(--ease), background .3s; }
+.btn::after { content: ""; width: 20px; height: 20px; background: currentColor; -webkit-mask: url(assets/img/arrow-basic.svg) center/contain no-repeat; mask: url(assets/img/arrow-basic.svg) center/contain no-repeat; transition: transform .3s var(--ease); }
 .btn:hover::after { transform: translateX(4px); }
-.btn-primary { background: var(--c-primary); color: var(--w); }
-.btn-primary::after { background-image: url(assets/img/arrow-basic_w.svg); }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
 .btn-circle { width: 52px; padding: 0; }
 
 /* 나타나는 움직임 */

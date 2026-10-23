@@ -17,7 +17,7 @@ if (/(^|\.)pondmakers\.com$/.test(location.hostname)) location.replace("https://
 <body>
 <header class="bar">
   <div class="bar-title">
-    <img src="../assets/logo/logo.svg" alt="폰드메이커스">
+    <img class="logo-light" src="../assets/logo/logo.svg" alt="폰드메이커스"><img class="logo-dark" src="../assets/logo/logo-white.svg" alt="폰드메이커스">
     <span>문구 관리</span>
   </div>
   <p class="bar-status" id="status" role="status">불러오는 중</p>
@@ -45,7 +45,11 @@ if (/(^|\.)pondmakers\.com$/.test(location.hostname)) location.replace("https://
       <div class="seg" role="group" aria-label="화면 크기" id="seg-device">
         <button type="button" data-device="pc" aria-pressed="true">PC</button>
         <button type="button" data-device="mobile" aria-pressed="false">모바일</button>
-        <button type="button" data-device="all" aria-pressed="false">둘 다</button>
+        <button type="button" data-device="all" aria-pressed="false">4화면</button>
+      </div>
+      <div class="seg" role="group" aria-label="테마" id="seg-theme">
+        <button type="button" data-theme-btn="light" aria-pressed="true">라이트</button>
+        <button type="button" data-theme-btn="dark" aria-pressed="false">다크</button>
       </div>
       <a class="open-live" href="../" target="_blank" rel="noopener">운영 사이트 열기</a>
     </div>

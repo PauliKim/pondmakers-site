@@ -12,7 +12,7 @@
 
 ## 구조 (빌드 단계 없음, 저장소 루트가 그대로 배포됨)
 - `index.html` 한 페이지 마크업과 페이지 전용 스타일. 구역: 첫 화면(#section01) · 비전(#section02) · 서비스(#section03) · 문화기술비전(#section04) · 뉴스(#section05) · 문의(#section06)
-- `styles.css` 디자인 토큰(`:root`)과 공통 구성 요소 → `DESIGN.md`
+- `styles.css` 디자인 토큰(`:root`, 라이트·다크)과 공통 구성 요소. 토큰 원본은 Claude Design의 ‘폰드메이커스’ 디자인 시스템 → `DESIGN.md`
 - `app.js` 슬라이드, 숫자 세기, 문화기술 장면 전환, 뉴스 목록, 문의 보내기, 어드민 미리보기 연결(`window.pondPreview`). 모든 경로는 상대 경로
 - `data/copy.json` 고정 문구(번호별). `data/copy-schema.json` 문구 항목 목록(구역, 위치, 자리표시). 사람이 고치는 곳
 - `data/news.json` 뉴스 카드 목록(제목, 그림, 링크). 그림은 `assets/news/`
@@ -36,7 +36,8 @@
 
 ## 화면·문구 원칙
 - 예전 pondmakers.com과 같은 결: 하늘색→흰색 첫 화면, 남색·파랑 그라데이션(`--gradient`), 큰 굵은 제목, 30px 둥근 카드, 반짝이 장식.
-- 디자인 값은 `styles.css` 토큰만 쓴다. 새 색이나 글꼴을 임의로 넣지 않는다(`DESIGN.md`).
+- 디자인 값은 `styles.css` 토큰만 쓴다. 새 색이나 글꼴을 임의로 넣지 않는다. 기준은 Claude Design 디자인 시스템(https://claude.ai/artifact/JE6k6ucpHfAk7YcjrxkWVz), 값을 바꾸면 그쪽과 함께 바꾼다(`DESIGN.md`).
+- 라이트·다크 두 테마를 지원한다(시스템 설정을 따르고 `data-theme`이 덮어씀). 색은 토큰으로만 쓰고, 화면을 바꾸면 두 테마 모두 확인한다. 문의 구역(`inverse`)은 테마와 상관없이 어둡다.
 - 글꼴: 한글 Pretendard(`--font-ko`), 영문 머리말·숫자 Outfit(`--font-en`).
 - 고정 문구는 `data/copy.json`에서만 고친다. index.html·app.js에 문구를 직접 쓰지 않는다.
   - index.html: 요소에 `data-copy="번호"`를 달고 기본 문구를 넣는다(안에는 글자와 `<br>`만). 입력칸 안내는 `data-copy-ph="번호"`(placeholder보다 앞). 고친 뒤 `python3 scripts/apply_copy.py`
@@ -45,7 +46,7 @@
 - 숫자 실적(D-10 등)은 숫자로 시작하면 0부터 올라가며 나타난다(`100+`, `20M+`).
 - 뉴스는 `data/news.json`에 위에서부터 나오는 순서로 적고, 그림은 900px 이하 JPG로 `assets/news/`에 넣는다.
 - 소개 문구는 사람이 쓴 것처럼 담백하게. 과장된 수식어나 AI 같은 말투를 쓰지 않는다.
-- 모바일 폭(375px)에서도 확인한다.
+- 모바일 폭(375px)과 다크 테마에서도 확인한다.
 
 ## 보안
 - 문구 저장 서버의 `GITHUB_TOKEN`, `ACCESS_AUD`, 문의 메일의 `RESEND_API_KEY`, `TURNSTILE_SECRET` 등은 Cloudflare Pages 환경 변수에만 둔다. 코드·커밋·로그에 쓰지 않는다.

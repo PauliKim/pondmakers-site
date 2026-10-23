@@ -16,7 +16,7 @@
   let sha = null;             // 저장된 data/copy.json 버전
   let canSave = false;
   let activeId = null;
-  const view = { device: "pc" };
+  const view = { device: "pc", theme: "light" };
 
   // ---------- 상태 표시 ----------
   const changedIds = () => Object.keys(draft).filter((k) => draft[k] !== saved[k]);
@@ -95,15 +95,18 @@
   let frames = [];
   function buildStage() {
     const stage = $("#stage");
-    const list = view.device === "all" ? ["pc", "mobile"] : [view.device];
+    const list = view.device === "all"
+      ? [["pc", "light"], ["mobile", "light"], ["pc", "dark"], ["mobile", "dark"]]
+      : [[view.device, view.theme]];
     stage.className = `stage ${view.device === "all" ? "all" : "one"}`;
-    stage.innerHTML = list.map((d) => `<div class="frame" data-device="${d}">
-        <div class="frame-label">${VIEWS[d].label}</div>
-        <div class="frame-box"><iframe title="${VIEWS[d].label} 미리보기" src="../?preview=1" width="${VIEWS[d].w}" height="${VIEWS[d].h}"></iframe></div>
+    stage.innerHTML = list.map(([d, th]) => `<div class="frame" data-device="${d}" data-theme="${th}">
+        <div class="frame-label">${VIEWS[d].label} · ${th === "light" ? "라이트" : "다크"}</div>
+        <div class="frame-box"><iframe title="${VIEWS[d].label} ${th === "light" ? "라이트" : "다크"} 미리보기" src="../?preview=1" width="${VIEWS[d].w}" height="${VIEWS[d].h}"></iframe></div>
       </div>`).join("");
-    frames = [...stage.querySelectorAll(".frame")].map((el) => ({ el, iframe: el.querySelector("iframe"), device: el.dataset.device }));
+    frames = [...stage.querySelectorAll(".frame")].map((el) => ({ el, iframe: el.querySelector("iframe"), device: el.dataset.device, theme: el.dataset.theme }));
     frames.forEach((f) => f.iframe.addEventListener("load", () => prepareFrame(f)));
     fitFrames();
+    $("#seg-theme").classList.toggle("off", view.device === "all");
   }
   // iframe을 칸 크기에 맞게 줄인다(실제 1280px·390px 화면 그대로)
   function fitFrames() {
@@ -117,8 +120,9 @@
   }
   function prepareFrame(f) {
     const doc = f.iframe.contentDocument; if (!doc) return;
+    doc.documentElement.dataset.theme = f.theme;
     const style = doc.createElement("style");
-    style.textContent = `.copy-hl { outline: 3px solid var(--c-second) !important; outline-offset: 3px; border-radius: 4px; transition: outline-color .6s; }
+    style.textContent = `.copy-hl { outline: 3px solid var(--second) !important; outline-offset: 3px; border-radius: 4px; transition: outline-color .6s; }
       .copy-hl.fade { outline-color: transparent !important; } html { scroll-behavior: auto !important; }`;
     doc.head.appendChild(style);
     // 미리보기 안 링크는 새 창으로만 열린다(미리보기가 다른 사이트로 넘어가지 않게)
@@ -181,6 +185,12 @@
     view.device = b.dataset.device;
     $("#seg-device").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
     buildStage();
+  });
+  $("#seg-theme").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-theme-btn]"); if (!b) return;
+    view.theme = b.dataset.themeBtn;
+    $("#seg-theme").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    frames.forEach((f) => { f.theme = view.theme; f.el.dataset.theme = view.theme; f.el.querySelector(".frame-label").textContent = `${VIEWS[f.device].label} · ${view.theme === "light" ? "라이트" : "다크"}`; const d = f.iframe.contentDocument; if (d) d.documentElement.dataset.theme = view.theme; });
   });
   window.addEventListener("resize", fitFrames);
   window.addEventListener("beforeunload", (e) => { if (changedIds().length) { e.preventDefault(); e.returnValue = ""; } });

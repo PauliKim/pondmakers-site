@@ -1,5 +1,5 @@
 /* 개인정보처리방침·이메일무단수집거부 페이지. 토큰은 ../styles.css */
-.pol-hd { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
+.pol-hd { position: sticky; top: 0; z-index: 10; background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
 .pol-hd .wrap { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .pol-hd img { width: 140px; height: auto; }
 .pol-hd a.back { font: 600 var(--t-15)/1 var(--font-ko); color: var(--title); }
@@ -10,7 +10,7 @@
 .pol-box h2 { font: 700 var(--t-18)/1.6 var(--font-ko); color: var(--title); margin-bottom: 12px; }
 .pol-box strong { display: block; color: var(--title); margin-top: 12px; }
 .pol-box ul ul { padding-left: 1em; }
-.pol-box .list-txt { margin: 10px 0; padding: 18px 22px; background: var(--bg-light); border-radius: var(--r-20); }
+.pol-box .list-txt { margin: 10px 0; padding: 18px 22px; background: var(--surface); border-radius: var(--radius-20); }
 .pol.center { text-align: center; padding-block: clamp(100px, 14vw, 200px); }
-.pol.center i { display: block; margin-top: 30px; font-style: normal; color: var(--muted); }
-.pol-ft { padding: 40px 0; border-top: 1px solid var(--line-soft); font: 400 var(--t-14)/1.5 var(--font-en); color: var(--muted); }
+.pol.center i { display: block; margin-top: 30px; font-style: normal; color: var(--text); }
+.pol-ft { padding: 40px 0; border-top: 1px solid var(--line-soft); font: 400 var(--t-14)/1.5 var(--font-en); color: var(--text); }
