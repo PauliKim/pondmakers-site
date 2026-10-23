@@ -63,14 +63,15 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 
 값을 넣은 뒤 **Deployments → 맨 위 배포 → Retry deployment**.
 
-## 4단계. 문의 메일 켜기
+## 4단계. 문의 메일 켜기 (완료)
 
 지금 상태(2026-10-23):
 - Turnstile 위젯 `폰드메이커스 문의 양식`(pondmakers.pages.dev, pondmakers.com) 생성, 사이트 키는 index.html에.
 - Resend 팀 `kimmhaa`에 `pondmakers.com` **Verified**(도쿄). 다른 Resend 팀에 등록돼 있던 것을 소유 인증으로 가져옴.
 - 카페24 DNS에 추가한 레코드: TXT `@` `resend-domain-verification=…`, TXT `resend._domainkey`(DKIM), TXT `_dmarc` `v=DMARC1; p=none;`, CNAME `send` → `send.forge.rmta.net`, CNAME `rsend` → `rsend-apne1.forge.rmta.net`. 루트 MX(mailplug)와 SPF는 그대로. Resend가 보여 주는 **수신용 루트 MX(receive-…)는 넣지 않는다**(회사 메일이 mailplug에서 빠져나감).
 - Pages 변수 `CONTACT_FROM` = `폰드메이커스 홈페이지 <noreply@pondmakers.com>`.
-- **남은 것: `RESEND_API_KEY`, `TURNSTILE_SECRET`(둘 다 Secret) 입력 후 다시 배포.** 비밀 키를 넣기 전까지 서버는 Turnstile 확인을 건너뜁니다.
+- Pages Secret `RESEND_API_KEY`, `TURNSTILE_SECRET` 입력 후 다시 배포(2026-10-24). **문의 메일 동작 확인 완료**: 운영 사이트 양식에서 보낸 점검 문의가 Resend에서 contact@pondmakers.com으로 Delivered. Turnstile 토큰 없는 요청은 400으로 거부됨.
+- 보낸 기록은 Resend → Emails에서 봅니다. 받는 주소를 바꾸려면 Pages 변수 `CONTACT_TO`(쉼표로 여러 개)를 넣고 다시 배포합니다.
 
 문의 양식은 `functions/api/contact.js`가 메일로 보냅니다(Resend 사용, 월 3,000통 무료). 설정 전에는 "contact@pondmakers.com로 메일을 보내 주세요"라는 안내와, 입력한 내용이 담긴 메일 쓰기 링크가 나옵니다.
 
