@@ -90,9 +90,10 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 
 결정: 네임서버는 카페24에 그대로 두고 **www.pondmakers.com만** 새 사이트로 연결합니다. 메일(mailplug MX, SPF TXT)은 건드리지 않습니다.
 
-- [x] Cloudflare Pages → pondmakers → Custom domains에 `www.pondmakers.com` 추가(“My DNS provider”, DNS 확인 대기 중)
+- [x] Cloudflare Pages → pondmakers → Custom domains에 `www.pondmakers.com` 추가(“My DNS provider”)
 - [x] 카페24 DNS 관리 → pondmakers.com → 별칭(CNAME) 관리 → `www` 레코드를 `pondmakers.com` → **`pondmakers.pages.dev`**로 수정(2026-10-23, 바로 반영됨)
-- [ ] Cloudflare에서 **Check DNS records** → Active 확인(HTTPS 자동). 2026-10-23 확인 요청함, 활성화되면 메일이 옵니다. 그 전까지 www 주소는 열리지 않습니다.
+- [x] Cloudflare에서 `www.pondmakers.com` **Active**(2026-10-23). HTTPS 인증서 Google Trust Services, 자동 갱신.
+- 참고: www 주소의 `/admin/`은 화면이 `pondmakers.pages.dev/admin/`으로 넘기고, `/api/copy`는 로그인 토큰이 없으면 401로 거부합니다.
 - [ ] 루트(pondmakers.com) → `https://www.pondmakers.com` 넘기기. 카페24 **도메인 포워딩은 쓸 수 없습니다**: pondmakers.com이 호스팅 계정 `pondmakers26`에 연결돼 있어 막혀 있고, 포워딩은 네임서버를 cafe24dns로 바꿔 메일 레코드도 다시 넣어야 합니다. 대신 `pondmakers26` 호스팅(FTP 또는 웹 파일 관리자)의 웹 루트 `.htaccess` 맨 위에 아래를 넣습니다. 루트 A 레코드(220.73.160.28)와 호스팅은 그대로 둡니다.
 
   ```apache

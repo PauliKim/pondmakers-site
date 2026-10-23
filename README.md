@@ -2,7 +2,7 @@
 
 PondMakers Inc. 회사 소개 사이트. 정적 파일(HTML·CSS·JS)과 Cloudflare Pages로 운영합니다.
 
-- 운영: https://pondmakers.pages.dev (pondmakers.com 연결은 `DEPLOY.md` 5단계)
+- 운영: https://www.pondmakers.com (Cloudflare Pages `pondmakers`, https://pondmakers.pages.dev). www 없는 주소 넘기기는 `DEPLOY.md` 5단계
 - 문구 관리: https://pondmakers.pages.dev/admin/
 - 개발·운영 규칙: `CLAUDE.md` · 배포 설정: `DEPLOY.md` · 디자인 토큰: `DESIGN.md`
 
