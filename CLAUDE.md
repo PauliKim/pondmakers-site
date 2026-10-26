@@ -27,6 +27,9 @@
 - `functions/_lib/server.js` 어드민 서버 공용(Access 로그인 확인, GitHub 파일 읽기·쓰기)
 - `policy/privacy.html`, `policy/email.html` 개인정보처리방침, 이메일무단수집거부(예전 사이트 내용 그대로). 문구 어드민 대상이 아니라 파일을 직접 고친다
 - `admin/` 문구 관리 화면(/admin). `functions/api/copy.js` 저장 서버(Access 로그인 확인 후 GitHub에 커밋). `functions/_lib/copy.js` 공용 함수
+- SEO 설정: 어드민 `/admin/seo.html` + `functions/api/seo.js`. 언어별 검색·공유 문구는 copy 파일 A-01~A-04, 언어와 상관없는 값(링크 미리보기 이미지, 검색 노출 noindex, 검색엔진 소유 확인 코드, 회사 정보 구조화 데이터)은 `data/seo.json`
+  - 세 페이지 `<head>`의 `<!-- seo:start -->` ~ `<!-- seo:end -->`는 자동 생성(`scripts/apply_copy.py`의 seo_block = `functions/_lib/seo.js`의 seoBlock). 그 사이를 손으로 고치지 않는다
+  - 저장은 seo.json·copy 파일·세 페이지·새 이미지(`assets/seo/og-날짜.jpg`)를 커밋 하나로 올린다(`functions/_lib/server.js` commitFiles, Git Data API)
 - `functions/api/contact.js` 문의 메일 보내기(Resend). `functions/_lib/contact.js` 검사·메일 본문 함수
 - `scripts/apply_copy.py` 세 언어 copy 문구를 페이지의 `data-copy`·`data-copy-ph`·`data-copy-aria`·`data-copy-alt`에 써 넣고 en/·ja/ 페이지를 만든다. `tests/test_copy.py` 문구·다국어·뉴스 점검(맥에서는 서버 JS와 나라별 이동 규칙도 osascript로 점검)
 - `_headers` 캐시 설정, `_redirects` 예전 그누보드 주소(`/bbs/…`, `/theme/basic/policy/…`) → 새 주소
