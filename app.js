@@ -1,4 +1,4 @@
-// 폰드메이커스 홈페이지 — 첫 화면 슬라이드, 숫자 세기, 문화기술 장면 전환, 뉴스 목록(data/news.json), 문의 보내기.
+// 폰드메이커스 홈페이지 — 첫 화면 슬라이드, 숫자 세기, 문화기술 장면 전환, 아티스트 캐러셀(굿덕 API, 실패 시 data/news.json), 문의 보내기.
 // 고정 문구는 data/copy.json(영어 copy.en.json, 일본어 copy.ja.json)에 번호(C-01 등)로 있다. 어드민(/admin) 미리보기는 window.pondPreview로 문구를 바꿔 본다.
 // en/, ja/ 페이지는 <html data-lang data-root="../">로 자기 언어와 사이트 맨 위 경로를 알려 준다.
 (() => {
@@ -208,7 +208,13 @@
 
   // ---------- 시작 ----------
   const loadCopy = fetch(ROOT + (LANG === "ko" ? "data/copy.json" : `data/copy.${LANG}.json`)).then((r) => (r.ok ? r.json() : null)).then((c) => { if (c) { COPY = c.items; applyStatic(); } }).catch(() => {});
-  const loadNews = fetch(ROOT + "data/news.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }).then((j) => { NEWS = j.news || []; }).catch(() => { NEWS = []; });
+  // 아티스트 캐러셀: 굿덕 API(서버 functions/api/artists.js)에서 멤버십·프라이빗 채팅 판매 중 아티스트를 팔로우 많은 순으로.
+  // 굿덕이 실패하거나 로컬 미리보기처럼 서버가 없으면 data/news.json의 고정 목록을 쓴다.
+  const getJson = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  const loadNews = getJson(ROOT + "api/artists?limit=20")
+    .then((j) => { if (!j.artists || !j.artists.length) throw new Error("empty"); NEWS = j.artists.map((a) => ({ title: a.nameEn, image: a.imageUrl })); })
+    .catch(() => getJson(ROOT + "data/news.json").then((j) => { NEWS = j.news || []; }))
+    .catch(() => { NEWS = []; });
   let ready = false;
   Promise.all([loadCopy, loadNews]).then(() => {
     renderNews(); onScroll();

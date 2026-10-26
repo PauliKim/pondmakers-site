@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<script>
+/* 로그인(Cloudflare Access)은 pondmakers.pages.dev에 건다(admin/index.html과 같은 이유). */
+if (/(^|\.)pondmakers\.com$/.test(location.hostname)) location.replace("https://pondmakers.pages.dev/admin/artists.html" + location.search);
+</script>
+<title>아티스트 노출 · 폰드메이커스</title>
+<link rel="icon" href="../assets/logo/favicon.png">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="artists-page">
+<header class="bar">
+  <div class="bar-title">
+    <img class="logo-light" src="../assets/logo/logo.svg" alt="폰드메이커스"><img class="logo-dark" src="../assets/logo/logo-white.svg" alt="폰드메이커스">
+    <span>아티스트 노출</span>
+  </div>
+  <p class="bar-status" id="status" role="status">불러오는 중</p>
+  <div class="bar-actions">
+    <a class="bar-link" href="./">문구 관리</a>
+    <span class="who" id="who"></span>
+    <button class="btn btn-line btn-sm" type="button" id="revert" disabled>되돌리기</button>
+    <button class="btn btn-book" type="button" id="save" disabled>저장하고 게시</button>
+  </div>
+</header>
+
+<p class="notice" id="notice" hidden></p>
+
+<main class="artists-main">
+  <div class="artists-top">
+    <p class="artists-help">굿덕에서 <b>멤버십 또는 프라이빗 채팅을 판매 중</b>인 아티스트가 팔로우 많은 순으로 나옵니다. 홈페이지 캐러셀에는 숨기지 않은 아티스트 중 앞에서부터 20명이 보입니다. 숨김을 바꾸고 저장하면 1~2분 뒤 반영됩니다(캐시 때문에 최대 10분).</p>
+    <label class="search"><span class="sr">아티스트 찾기</span><input type="search" id="search" placeholder="영어명이나 id로 찾기"></label>
+  </div>
+  <ol class="artist-grid" id="grid"></ol>
+  <section class="hidden-gone" id="gone" hidden>
+    <h2>숨김 목록에 있지만 지금 굿덕 후보에 없는 아티스트</h2>
+    <p>판매가 끝났거나 이름이 바뀐 경우입니다. 숨김을 풀면 목록에서 지워집니다.</p>
+    <ul id="gone-list"></ul>
+  </section>
+</main>
+
+<dialog class="confirm" id="confirm" aria-labelledby="confirm-title">
+  <form method="dialog">
+    <h2 id="confirm-title">숨김을 바꿀까요?</h2>
+    <p class="confirm-sub">저장하면 1~2분 뒤 운영 사이트에 반영됩니다.</p>
+    <ol class="diff" id="diff"></ol>
+    <div class="confirm-actions">
+      <button class="btn btn-line" value="cancel">취소</button>
+      <button class="btn btn-book" value="ok">저장하고 게시</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="artists.js"></script>
+</body>
+</html>
