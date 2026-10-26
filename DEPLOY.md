@@ -92,6 +92,13 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 2. 사이트 키를 `index.html`의 `<form class="inquiry-form" … data-turnstile="">` 안에 넣고 커밋
 3. 비밀 키를 환경 변수 `TURNSTILE_SECRET`(Secret)에 넣고 다시 배포
 
+## 4-1단계. 아티스트 캐러셀(굿덕 API)
+
+- Pages Secret `GOODDUCK_API_KEY`: 굿덕 웹사이트 API 키. 값이 비어 있거나 틀리면 `/api/artists`가 503·502를 돌려주고, 홈페이지는 `data/news.json` 고정 목록을 보여 준다.
+- 키를 바꾸면 다시 배포해야 적용된다(Deployments → 맨 위 → Retry deployment).
+- 확인: `https://www.pondmakers.com/api/artists?limit=5` 가 `{"generatedAt":…, "artists":[…]}` 이면 정상.
+- 숨김 관리: https://pondmakers.pages.dev/admin/artists.html (문구 관리와 같은 로그인).
+
 ## 5단계. pondmakers.com 도메인 옮기기 (www 연결로 결정, 2026-10-23)
 
 결정: 네임서버는 카페24에 그대로 두고 **www.pondmakers.com만** 새 사이트로 연결합니다. 메일(mailplug MX, SPF TXT)은 건드리지 않습니다.

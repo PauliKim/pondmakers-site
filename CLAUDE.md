@@ -20,7 +20,11 @@
   - `en/index.html`, `ja/index.html`은 `scripts/apply_copy.py`가 index.html과 그 언어 copy 파일로 **만드는 파일**이다. 직접 고치지 않는다
   - `functions/_middleware.js` + `functions/_lib/lang.js` 첫 화면(/)에서 접속 나라로 이동: KR → `/`, JP → `/ja/`, 그 밖 → `/en/`. 언어 메뉴에서 고른 언어(쿠키 `lang`)가 앞서고, 검색 로봇과 어드민 미리보기(`?preview`)는 옮기지 않는다. `_routes.json`으로 `/`와 `/api/*`에서만 돈다
   - 개인정보처리방침·이메일무단수집거부는 한국어 페이지 하나만 있다(영어·일본어 바닥글에서 "(Korean)" 표시로 연결)
-- `data/news.json` 뉴스 카드 목록(제목, 그림, 링크). 그림은 `assets/news/`
+- 아티스트 캐러셀(뉴스 구역): 굿덕 API에서 멤버십·프라이빗 채팅 판매 중 아티스트를 팔로우 많은 순으로 20명
+  - `functions/api/artists.js` 굿덕 `GET https://api-app-v2.goodduck.xyz/api/website/artists?limit=1~100`(헤더 `X-Api-Key` = Secret `GOODDUCK_API_KEY`)를 서버에서 불러 숨긴 아티스트를 빼고 10분 캐시. 키는 브라우저로 보내지 않는다
+  - 숨김: 어드민 `/admin/artists.html`(+ `functions/api/artists-admin.js`)에서 골라 `data/artists-hidden.json`에 커밋. 거르기·정렬은 `functions/_lib/artists.js`, 점검 `tests/test_artists.py`
+  - `data/news.json` 굿덕 API가 실패하거나 로컬 미리보기일 때 쓰는 고정 목록(제목, 그림, 링크). 그림은 `assets/news/`
+- `functions/_lib/server.js` 어드민 서버 공용(Access 로그인 확인, GitHub 파일 읽기·쓰기)
 - `policy/privacy.html`, `policy/email.html` 개인정보처리방침, 이메일무단수집거부(예전 사이트 내용 그대로). 문구 어드민 대상이 아니라 파일을 직접 고친다
 - `admin/` 문구 관리 화면(/admin). `functions/api/copy.js` 저장 서버(Access 로그인 확인 후 GitHub에 커밋). `functions/_lib/copy.js` 공용 함수
 - `functions/api/contact.js` 문의 메일 보내기(Resend). `functions/_lib/contact.js` 검사·메일 본문 함수
