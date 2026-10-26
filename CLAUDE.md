@@ -5,7 +5,7 @@
 - 저장소: https://github.com/PauliKim/pondmakers-site (기본 브랜치 `main`)
 - 배포: Cloudflare Pages 프로젝트 `pondmakers` → https://pondmakers.pages.dev (2026-10-23 연결 완료. 어드민 저장·문의 메일 환경 변수는 아직 없음 → `DEPLOY.md` 3·4단계)
 - 정식 주소는 https://www.pondmakers.com (카페24 DNS에서 www만 CNAME으로 연결). 네임서버와 메일(MX, mailplug)은 건드리지 않는다.
-- 개발은 www 사이트에서 한다. www 없는 pondmakers.com은 **개발이 끝날 때까지 예전 사이트(카페24 호스팅 pondmakers26)를 그대로 둔다.** 완료되면 루트도 이 사이트로 바꾼다(`DEPLOY.md` 5단계). 사용자가 끝났다고 하기 전에는 루트를 건드리지 않는다.
+- 운영 주소는 https://www.pondmakers.com. 루트 pondmakers.com은 2026-10-26부터 www로 301 넘긴다(카페24 호스팅 pondmakers26 웹 루트 `.htaccess` 맨 위, `scripts/root_redirect.sh`). 예전 그누보드 사이트는 쓰지 않는다. 카페24 호스팅을 해지하면 넘기기도 사라지므로, 해지 전에 네임서버를 Cloudflare로 옮긴다(`DEPLOY.md` 5단계).
 
 ## 대화와 작성 언어
 - 사용자와는 한국어로 대화한다.

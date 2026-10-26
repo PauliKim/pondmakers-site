@@ -112,13 +112,16 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 - [x] 카페24 DNS 관리 → pondmakers.com → 별칭(CNAME) 관리 → `www` 레코드를 `pondmakers.com` → **`pondmakers.pages.dev`**로 수정(2026-10-23, 바로 반영됨)
 - [x] Cloudflare에서 `www.pondmakers.com` **Active**(2026-10-23). HTTPS 인증서 Google Trust Services, 자동 갱신.
 - 참고: www 주소의 `/admin/`은 화면이 `pondmakers.pages.dev/admin/`으로 넘기고, `/api/copy`는 로그인 토큰이 없으면 401로 거부합니다.
-- [ ] 루트(pondmakers.com) → `https://www.pondmakers.com` 넘기기. 카페24 **도메인 포워딩은 쓸 수 없습니다**: pondmakers.com이 호스팅 계정 `pondmakers26`에 연결돼 있어 막혀 있고, 포워딩은 네임서버를 cafe24dns로 바꿔 메일 레코드도 다시 넣어야 합니다. 대신 `pondmakers26` 호스팅(FTP 또는 웹 파일 관리자)의 웹 루트 `.htaccess` 맨 위에 아래를 넣습니다. 루트 A 레코드(220.73.160.28)와 호스팅은 그대로 둡니다.
+- [x] 루트(pondmakers.com) → `https://www.pondmakers.com` 301 넘기기(2026-10-26). 카페24 **도메인 포워딩은 쓸 수 없어**(pondmakers.com이 호스팅 `pondmakers26`에 연결돼 있음) 호스팅 웹 루트 `.htaccess` 맨 위에 넣었다. 카페24 호스팅에는 웹 파일 관리자가 없어 FTP(`pondmakers.com`:21, 아이디 `pondmakers26`, 웹 루트는 FTP 첫 폴더)로 올린다: `zsh scripts/root_redirect.sh` (비밀번호는 실행한 사람이 입력, `--undo`로 되돌리기, 원래 파일은 `~/Desktop/pondmakers-htaccess-backup/`).
 
   ```apache
   RewriteEngine On
   RewriteCond %{HTTP_HOST} ^pondmakers\.com$ [NC]
   RewriteRule ^(.*)$ https://www.pondmakers.com/$1 [R=301,L]
   ```
+  확인: `https://pondmakers.com/…` → `https://www.pondmakers.com/…`(경로 유지, 예전 게시판 주소는 `_redirects`가 이어서 처리). 브라우저 주소창에 pondmakers.com을 치면 새 사이트가 열린다.
+  알려진 문제: `http://`(s 없는) 주소는 카페24 서버가 `http://같은주소/`로 계속 돌려보내 열리지 않는다. 넘기기를 넣기 전부터 있던 카페24 쪽 동작이다(규칙과 상관없는 `pondmakers26.mycafe24.com`도 똑같다). 주소창 입력은 브라우저가 https로 먼저 열어 문제없다.
+- 카페24 호스팅을 해지하면 이 넘기기도 사라진다. 해지 전에 아래 "네임서버를 Cloudflare로 옮기기"를 하고 Pages에 `pondmakers.com`을 추가한다.
 - [ ] 넘기기가 확인되면 카페24 호스팅 자료(문의 기록 DB, 게시판) 백업
 
 사이트의 canonical·sitemap·공유 이미지 주소는 이미 `https://www.pondmakers.com/`으로 맞춰 두었습니다.
