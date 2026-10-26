@@ -1,12 +1,14 @@
 #!/bin/zsh
-# pondmakers.com(루트) → https://www.pondmakers.com 301 넘기기를 카페24 호스팅(pondmakers26) 웹 루트 .htaccess 맨 위에 넣는다.
+# pondmakers.com(루트) → https://www.pondmakers.com 넘기기를 카페24 호스팅(pondmakers26) 웹 루트에 올린다.
+#   .htaccess 맨 위에 scripts/cafe24/redirect.htaccess 덩어리(이미 있으면 새 것으로 바꿈) + http용 안내 페이지 scripts/cafe24/go-www.html
 # 카페24 호스팅에는 웹 파일 관리자가 없어 FTP로 고친다. 비밀번호는 실행한 사람이 직접 입력하고, 어디에도 저장하지 않는다.
-#   zsh scripts/root_redirect.sh          넣기(이미 있으면 아무것도 안 함)
+#   zsh scripts/root_redirect.sh          넣기·바꾸기
 #   zsh scripts/root_redirect.sh --undo   백업해 둔 원래 .htaccess로 되돌리기
-# 원래 파일은 ~/Desktop/pondmakers-htaccess-backup/ 에 남긴다.
+# 올리기 직전 파일은 ~/Desktop/pondmakers-htaccess-backup/ 에 남긴다(처음 원래 파일은 htaccess.orig, 이후는 날짜를 붙여).
 set -eu
 HOST="pondmakers.com"; USER_ID="pondmakers26"
 BACKUP=~/Desktop/pondmakers-htaccess-backup
+HERE=${0:A:h}; BLOCK="$HERE/cafe24/redirect.htaccess"; PAGE="$HERE/cafe24/go-www.html"
 mkdir -p "$BACKUP"
 
 CFG=$(mktemp); chmod 600 "$CFG"; trap 'rm -f "$CFG"' EXIT
@@ -36,18 +38,26 @@ if [[ "${1:-}" == "--undo" ]]; then
   echo "원래 .htaccess로 되돌렸습니다."; exit 0
 fi
 
-ORIG="$BACKUP/htaccess.orig"
-if ftp "ftp://$HOST/${WEB}.htaccess" -o "$ORIG.tmp" 2>/dev/null; then mv "$ORIG.tmp" "$ORIG"; else rm -f "$ORIG.tmp"; : > "$ORIG"; echo "(원래 .htaccess가 없었습니다)"; fi
-if grep -q 'www\.pondmakers\.com' "$ORIG"; then echo "이미 넘기기 규칙이 있습니다. 바꾸지 않습니다."; exit 0; fi
+NOW="$BACKUP/htaccess.$(date +%Y%m%d-%H%M%S)"
+if ftp "ftp://$HOST/${WEB}.htaccess" -o "$NOW" 2>/dev/null; then :; else : > "$NOW"; echo "(.htaccess가 없었습니다)"; fi
+[[ -f "$BACKUP/htaccess.orig" ]] || cp "$NOW" "$BACKUP/htaccess.orig"
 
+# 예전에 넣은 덩어리를 빼고(표시가 있는 것, 표시 없이 넣었던 첫 판 4줄+빈 줄) 새 덩어리를 맨 위에
 NEW="$BACKUP/htaccess.new"
 {
-  print -r -- '# 새 사이트(www.pondmakers.com, Cloudflare Pages)로 넘기기. 2026-10-26 추가'
-  print -r -- 'RewriteEngine On'
-  print -r -- 'RewriteCond %{HTTP_HOST} ^pondmakers\.com$ [NC]'
-  print -r -- 'RewriteRule ^(.*)$ https://www.pondmakers.com/$1 [R=301,L]'
+  cat "$BLOCK"
   print -r -- ''
-  cat "$ORIG"
+  awk '
+    /^# pondmakers-redirect:start/ { skip = 1; next }
+    /^# pondmakers-redirect:end/ { skip = 0; drop_blank = 1; next }
+    /^# 새 사이트\(www\.pondmakers\.com, Cloudflare Pages\)로 넘기기/ { old = 4; next }
+    old > 0 { old--; if (old == 0) drop_blank = 1; next }
+    skip { next }
+    drop_blank && /^[[:space:]]*$/ { drop_blank = 0; next }
+    { drop_blank = 0; print }
+  ' "$NOW"
 } > "$NEW"
+echo "---- 올릴 .htaccess 맨 위 ----"; head -16 "$NEW"; echo "----"
+ftp -T "$PAGE" "ftp://$HOST/${WEB}go-www.html"
 ftp -T "$NEW" "ftp://$HOST/${WEB}.htaccess"
-echo "넣었습니다. 원래 파일: $ORIG"
+echo "올렸습니다. 올리기 전 파일: $NOW"

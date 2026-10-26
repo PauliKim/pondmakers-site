@@ -1,0 +1,13 @@
+# pondmakers-redirect:start 새 사이트(www.pondmakers.com, Cloudflare Pages)로 넘기기. 저장소 scripts/cafe24/에서 관리
+RewriteEngine On
+# http:// 요청: 카페24 앞단(nginx)이 http 응답의 넘기기 주소를 http://같은주소/ 로 바꿔 버려 반복된다.
+# 그래서 넘기기 대신 안내 페이지(go-www.html, 200)를 보여 주고 브라우저에서 새 사이트로 옮긴다.
+RewriteCond %{HTTP:X-Forwarded-Proto} =http [NC]
+RewriteCond %{REQUEST_URI} !^/go-www\.html$
+RewriteRule ^ /go-www.html [L]
+RewriteCond %{REQUEST_URI} ^/go-www\.html$
+RewriteRule ^ - [L]
+# https:// 요청: 경로를 그대로 붙여 301
+RewriteCond %{HTTP_HOST} ^pondmakers\.com$ [NC]
+RewriteRule ^(.*)$ https://www.pondmakers.com/$1 [R=301,L]
+# pondmakers-redirect:end
