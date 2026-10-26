@@ -10,10 +10,11 @@ const HIDDEN_PATH = "data/artists-hidden.json";
 export async function onRequestGet({ request, env }) {
   try {
     const email = await signedInEmail(request, env);
-    if (!env.GOODDUCK_API_KEY) throw fail("굿덕 API 설정(GOODDUCK_API_KEY)이 아직 없습니다.", 503);
+    const key = (env.GOODDUCK_API_KEY || "").trim();
+    if (!key) throw fail(env.GOODDUCK_API_KEY === undefined ? "굿덕 API 설정(GOODDUCK_API_KEY)이 아직 없습니다." : "굿덕 API 키(GOODDUCK_API_KEY) 값이 비어 있습니다.", 503);
     const [file, res] = await Promise.all([
       getFile(env, HIDDEN_PATH),
-      fetch(`${GOODDUCK_ARTISTS}?limit=${MAX_LIMIT}`, { headers: { "X-Api-Key": env.GOODDUCK_API_KEY, accept: "application/json" } })
+      fetch(`${GOODDUCK_ARTISTS}?limit=${MAX_LIMIT}`, { headers: { "X-Api-Key": key, accept: "application/json" } })
     ]);
     const data = await res.json().catch(() => null);
     if (!res.ok) throw fail(`굿덕 아티스트 목록을 불러오지 못했습니다(${res.status}${data && data.code ? ` ${data.code}` : ""}).`, 502);

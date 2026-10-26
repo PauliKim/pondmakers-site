@@ -12,7 +12,8 @@ const TTL = 600; // 초
 export async function onRequestGet({ request, env, waitUntil }) {
   const url = new URL(request.url);
   const limit = clampLimit(url.searchParams.get("limit"));
-  if (!env.GOODDUCK_API_KEY) return json({ error: "굿덕 API 설정(GOODDUCK_API_KEY)이 아직 없습니다." }, 503);
+  const key = (env.GOODDUCK_API_KEY || "").trim();
+  if (!key) return json({ error: env.GOODDUCK_API_KEY === undefined ? "굿덕 API 설정(GOODDUCK_API_KEY)이 아직 없습니다." : "굿덕 API 키(GOODDUCK_API_KEY) 값이 비어 있습니다." }, 503);
 
   // 숨김 목록은 배포된 정적 파일. 내용이 바뀌면 캐시 열쇠도 바뀌어 바로 반영된다.
   const hiddenDoc = await env.ASSETS.fetch(new URL("/data/artists-hidden.json", url)).then((r) => (r.ok ? r.json() : null)).catch(() => null);
@@ -25,7 +26,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
   let data;
   try {
     const res = await fetch(`${GOODDUCK_ARTISTS}?limit=${upstreamLimit(limit, hidden.length)}`, {
-      headers: { "X-Api-Key": env.GOODDUCK_API_KEY, accept: "application/json" }
+      headers: { "X-Api-Key": key, accept: "application/json" }
     });
     data = await res.json().catch(() => null);
     if (!res.ok) {
