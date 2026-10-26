@@ -5,6 +5,7 @@
 - 일본어: data/copy.ja.json → ja/index.html
 
 어드민(/admin)에서 저장하면 서버(functions/api/copy.js)가 그 언어의 copy 파일과 페이지에 같은 일을 해서 함께 커밋한다.
+SEO 설정(data/seo.json)은 세 페이지의 <!-- seo:start --> ~ <!-- seo:end --> 사이에 똑같이 들어간다(어드민 SEO 설정은 functions/api/seo.js).
 copy 파일이나 index.html을 손으로 고쳤을 때 실행한다:  python3 scripts/apply_copy.py
 --check 를 붙이면 바꾸지 않고, 맞지 않는 곳이 있으면 실패로 끝난다(tests에서 쓴다).
 en/index.html, ja/index.html은 만들어지는 파일이라 직접 고치지 않는다. 화면 구조는 index.html에서 고친다.
@@ -33,6 +34,8 @@ TAGGED = re.compile(r'data-copy(?:-ph|-aria|-alt)?="([A-Z]-\d+)"')
 # 언어 폴더(en/, ja/)에서 한 단계 위를 가리키도록 바꿀 상대 주소. #, 스킴(https: mailto: data: …), /로 시작하는 것과 ./ 는 그대로
 REL_ATTR = re.compile(r'(\s(?:src|href)=")(?!#|[a-zA-Z][a-zA-Z0-9+.-]*:|/|\./")([^"]*")')
 REL_URL = re.compile(r'url\((?![\'"]?(?:[a-zA-Z][a-zA-Z0-9+.-]*:|/|#))([\'"]?)')
+SEO_BLOCK = re.compile(r"<!-- seo:start.*?<!-- seo:end -->", re.S)
+SEO_VERIFY = [("google", "google-site-verification"), ("naver", "naver-site-verification"), ("bing", "msvalidate.01")]
 LANG_LINK = re.compile(r'(<a\b[^>]*\bdata-lang-link="(\w+)"[^>]*\bhref=")([^"]*)(")')
 
 
@@ -63,6 +66,46 @@ def apply(page, items):
     for rx in ATTR.values():
         page = rx.sub(attr, page)
     return page, used
+
+
+def seo_block(seo):
+    """data/seo.json → <head>에 넣을 덩어리. functions/_lib/seo.js의 seoBlock과 같은 결과"""
+    image = SITE + seo["ogImage"]
+    esc = lambda v: html.escape(str(v), quote=True)
+    lines = [
+        "<!-- seo:start 자동 생성: data/seo.json(어드민 SEO 설정). 직접 고치지 않는다 -->",
+        f'<meta property="og:image" content="{esc(image)}">',
+        f'<meta property="og:image:width" content="{seo["ogImageWidth"]}">',
+        f'<meta property="og:image:height" content="{seo["ogImageHeight"]}">',
+        f'<meta name="twitter:image" content="{esc(image)}">',
+    ]
+    if seo.get("index") is False:
+        lines.append('<meta name="robots" content="noindex, nofollow">')
+    for key, name in SEO_VERIFY:
+        if seo["verification"].get(key):
+            lines.append(f'<meta name="{name}" content="{esc(seo["verification"][key])}">')
+    org = seo["organization"]
+    data = {"@context": "https://schema.org", "@type": "Organization", "name": org["name"]}
+    if org.get("alternateName"):
+        data["alternateName"] = org["alternateName"]
+    data["url"] = SITE
+    data["logo"] = SITE + "assets/logo/logo-512.png"
+    if org.get("sameAs"):
+        data["sameAs"] = org["sameAs"]
+    ld = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    lines += [f'<script type="application/ld+json">{ld}</script>', "<!-- seo:end -->"]
+    return "\n".join(lines)
+
+
+def apply_seo(page, seo):
+    if not SEO_BLOCK.search(page):
+        sys.exit("index.html에 <!-- seo:start --> ~ <!-- seo:end --> 자리가 없습니다.")
+    block = seo_block(seo)
+    return SEO_BLOCK.sub(lambda m: block, page, count=1)
+
+
+def load_seo():
+    return json.loads((ROOT / "data" / "seo.json").read_text())
 
 
 def lang_href(page_lang, target):
@@ -103,7 +146,7 @@ def build(template, lang):
 
 def main():
     check = "--check" in sys.argv
-    template = page_path("ko").read_text()
+    template = apply_seo(page_path("ko").read_text(), load_seo())
     tagged = set(TAGGED.findall(template))
     problems, changed = [], []
     for lang in LANGS:

@@ -1,0 +1,17 @@
+{
+ "_설명": "언어와 상관없는 SEO 설정. 어드민 SEO 설정(/admin/seo.html)에서 고치면 서버가 이 파일과 세 언어 페이지의 <!-- seo:start --> 덩어리를 함께 커밋한다. 손으로 고쳤으면 python3 scripts/apply_copy.py. 페이지 제목·설명·공유 문구는 copy 파일 A-01~A-04에 있다.",
+ "index": true,
+ "ogImage": "assets/logo/og-img.jpg",
+ "ogImageWidth": 800,
+ "ogImageHeight": 400,
+ "verification": {
+  "google": "",
+  "naver": "",
+  "bing": ""
+ },
+ "organization": {
+  "name": "Pondmakers Inc.",
+  "alternateName": "폰드메이커스",
+  "sameAs": []
+ }
+}

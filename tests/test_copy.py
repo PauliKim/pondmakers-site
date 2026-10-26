@@ -8,6 +8,7 @@
 - en/, ja/ 페이지의 상대 주소와 언어 전환 링크
 - data/news.json의 그림 파일이 있는지
 - (macOS) 서버의 applyCopy(functions/_lib/copy.js)가 파이썬과 같은 결과인지, 나라별 이동 규칙(functions/_lib/lang.js)
+- (macOS) SEO 덩어리(functions/_lib/seo.js)가 파이썬 seo_block과 같은지, 서버 검사가 잘못된 값을 막는지
 """
 import importlib.util
 import json
@@ -72,7 +73,7 @@ for lang in ("en", "ja"):
     check(f"{lang} 스타일 안 그림 주소", not re.search(r"url\((?!['\"]?(?:\.\./|data:|https?:))", p))
     links = dict(re.findall(r'data-lang-link="(\w+)" href="([^"]*)"', p))
     check(f"{lang} 언어 전환 링크", links == {"ko": "../", lang: "./", ({"en": "ja", "ja": "en"}[lang]): f"../{ {'en': 'ja', 'ja': 'en'}[lang]}/"}, f"{links}")
-    check(f"{lang} 한국어가 남지 않음(주석 제외)", not re.search(r"[가-힣]", re.sub(r"<!--.*?-->|<style>.*?</style>", "", p, flags=re.S).replace('lang="ko">KO', "")), "")
+    check(f"{lang} 한국어가 남지 않음(주석·SEO 덩어리 제외)", not re.search(r"[가-힣]", re.sub(r"<!-- seo:start.*?<!-- seo:end -->|<!--.*?-->|<style>.*?</style>", "", p, flags=re.S).replace('lang="ko">KO', "")), "")
 check("ko 언어 전환 링크", dict(re.findall(r'data-lang-link="(\w+)" href="([^"]*)"', page)) == {"ko": "./", "en": "en/", "ja": "ja/"})
 
 # 뉴스 목록: 그림 파일이 있고 제목이 비지 않았는지
@@ -97,6 +98,26 @@ if shutil.which("osascript"):
         expected, _ = ac.apply(target, {**copies[lang], **sample})
         got = js(lib + f"\nfunction run() {{ return applyCopy({json.dumps(target)}, {json.dumps({**copies[lang], **sample})}); }} run();")
         check(f"{lang} 서버 applyCopy가 파이썬과 같음", got == expected.strip(), "")
+
+    # SEO 덩어리: 서버(functions/_lib/seo.js)와 파이썬(seo_block)이 같은 결과인지, 서버 검사가 잘못된 값을 막는지
+    seo_lib = lib + "\n" + module("functions/_lib/seo.js")
+    seo_now = json.loads((ROOT / "data/seo.json").read_text())
+    seo_cases = [seo_now, {**seo_now, "index": False, "verification": {"google": "abc_DEF-123=", "naver": "0123abcd", "bing": "ABCDEF"},
+                           "organization": {"name": 'Pond "makers" </script> & Co', "alternateName": "폰드'메이커스", "sameAs": ["https://www.instagram.com/x", "https://x.com/y"]}}]
+    for i, case in enumerate(seo_cases):
+        got = js(seo_lib + f"\nfunction run() {{ const r = normalizeSeo({json.dumps(case)}); return JSON.stringify([r.errors, seoBlock(r.seo)]); }} run();")
+        errs, block = json.loads(got)
+        check(f"SEO 덩어리 {i} 서버가 파이썬과 같음", not errs and block == ac.seo_block(case), f"{errs} {block}")
+    check("SEO 덩어리 </script> 막음", "</script> &" not in ac.seo_block(seo_cases[1]))
+    for lang in ac.LANGS:
+        page_text = ac.page_path(lang).read_text()
+        got = js(seo_lib + f"\nfunction run() {{ return applySeo({json.dumps(page_text)}, normalizeSeo({json.dumps(seo_now)}).seo); }} run();")
+        check(f"{lang} 서버 applySeo가 지금 페이지와 같음", got == page_text.strip(), "")
+    bad = {**seo_now, "ogImage": "../secret.jpg", "verification": {"google": '<meta name="x" content="a b">'}, "organization": {"name": "", "sameAs": ["http://insecure"]}}
+    got = json.loads(js(seo_lib + f"\nJSON.stringify(normalizeSeo({json.dumps(bad)}).errors);"))
+    check("SEO 서버 검사가 잘못된 값을 막음", len(got) >= 4, str(got))
+    got = js(seo_lib + '\nverificationCode(\'<meta name="google-site-verification" content="AbC_123" />\');')
+    check("소유 확인 태그를 통째로 넣어도 코드만", got == "AbC_123", got)
 
     lang_lib = module("functions/_lib/lang.js")
     cases = [
