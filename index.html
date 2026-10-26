@@ -262,6 +262,8 @@ dialog.policy::backdrop { background: var(--scrim); }
   .stat-col.right { grid-column: 2; grid-row: 2; }
   .cards { flex-direction: column; height: auto; }
   .card { height: 360px; flex: none; }
+  /* 굿덕 로고 그림이 아래 설명 글과 겹치지 않게 위쪽에 작게. 바깥 배경은 그림 가장자리 색(위 회색→아래 검정)을 이어 붙인다 */
+  .card:nth-child(1) .bg { background: url(assets/img/service01.jpg) center top / auto 52% no-repeat, linear-gradient(180deg, #433f40, #000 27%); }
   .inquiry .wrap { grid-template-columns: 1fr; }
   .tech-col { min-height: 7em; }
   .tech-tags > * { font-size: var(--t-14); }
