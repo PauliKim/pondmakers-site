@@ -105,6 +105,7 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 - 검색엔진 등록: Google Search Console, 네이버 서치어드바이저에 `https://www.pondmakers.com`을 등록하고 "HTML 태그" 소유 확인 값을 SEO 설정에 넣어 저장 → 1~2분 뒤 확인. 그다음 사이트맵 `https://www.pondmakers.com/sitemap.xml` 제출.
   - [x] 네이버 서치어드바이저(2026-10-27): `https://www.pondmakers.com` 등록, HTML 태그 소유확인(코드는 SEO 설정 네이버 칸), 사이트맵 제출. 서치어드바이저는 Claude의 브라우저에서 열리지 않아(안전 제한) 네이버 화면은 사람이 직접 한다.
   - [x] Google Search Console(2026-10-26, kimmhaa@gmail.com이 아닌 다른 구글 계정으로 등록): URL 접두어 `https://www.pondmakers.com/`, HTML 태그 소유확인(코드는 SEO 설정 Google 칸), Sitemaps에 `sitemap.xml`. 사이트 쪽 확인(2026-10-27): 세 언어 페이지에 태그 있음, Googlebot으로 첫 화면·사이트맵 200
+    - 같은 계정에 `https://www.pondmakers.com/en/`, `/ja/` 속성도 있다(언어별 실적 보기용). 이 속성들에는 **사이트맵을 내지 않는다**: 입력칸 앞에 `/en/`이 붙어 없는 `/en/sitemap.xml`이 제출된다. 사이트맵은 www 속성의 `/sitemap.xml` 하나에 세 언어가 다 있다. 잘못 제출된 `/en/`·`/ja/sitemap.xml`은 2026-10-27에 삭제했다.
 
 ## 5단계. pondmakers.com 도메인 옮기기 (www 연결로 결정, 2026-10-23)
 

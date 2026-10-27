@@ -28,6 +28,7 @@
 - `policy/privacy.html`, `policy/email.html` 개인정보처리방침, 이메일무단수집거부(예전 사이트 내용 그대로). 문구 어드민 대상이 아니라 파일을 직접 고친다
 - `admin/` 문구 관리 화면(/admin). `functions/api/copy.js` 저장 서버(Access 로그인 확인 후 GitHub에 커밋). `functions/_lib/copy.js` 공용 함수
 - SEO 설정: 어드민 `/admin/seo.html` + `functions/api/seo.js`. 언어별 검색·공유 문구는 copy 파일 A-01~A-04, 언어와 상관없는 값(링크 미리보기 이미지, 검색 노출 noindex, 검색엔진 소유 확인 코드, 회사 정보 구조화 데이터)은 `data/seo.json`
+- `404.html` 없는 주소에 Pages가 404로 보여 주는 페이지(경로는 /로 시작, /en/·/ja/ 아래면 그 언어로 안내). 지우면 없는 주소에 첫 화면이 200으로 나가 검색엔진이 중복 페이지로 본다
   - 세 페이지 `<head>`의 `<!-- seo:start -->` ~ `<!-- seo:end -->`는 자동 생성(`scripts/apply_copy.py`의 seo_block = `functions/_lib/seo.js`의 seoBlock). 그 사이를 손으로 고치지 않는다
   - 저장은 seo.json·copy 파일·세 페이지·새 이미지(`assets/seo/og-날짜.jpg`)를 커밋 하나로 올린다(`functions/_lib/server.js` commitFiles, Git Data API)
 - `functions/api/contact.js` 문의 메일 보내기(Resend). `functions/_lib/contact.js` 검사·메일 본문 함수
