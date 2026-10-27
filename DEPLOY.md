@@ -103,6 +103,8 @@ pondmakers.com의 DNS가 카페24에 있어 pondmakers.com에는 Access를 걸 �
 
 - https://pondmakers.pages.dev/admin/seo.html (문구 관리와 같은 로그인, 같은 `GITHUB_TOKEN`). 저장 확인 완료(2026-10-26): 회사 정보 SNS 주소를 넣고 저장 → `pondmakers-admin` 커밋 하나(seo.json과 세 페이지) → 약 25초 뒤 운영 반영 → 원래대로 되돌려 저장.
 - 검색엔진 등록: Google Search Console, 네이버 서치어드바이저에 `https://www.pondmakers.com`을 등록하고 "HTML 태그" 소유 확인 값을 SEO 설정에 넣어 저장 → 1~2분 뒤 확인. 그다음 사이트맵 `https://www.pondmakers.com/sitemap.xml` 제출.
+  - [x] 네이버 서치어드바이저(2026-10-27): `https://www.pondmakers.com` 등록, HTML 태그 소유확인(코드는 SEO 설정 네이버 칸), 사이트맵 제출. 서치어드바이저는 Claude의 브라우저에서 열리지 않아(안전 제한) 네이버 화면은 사람이 직접 한다.
+  - [ ] Google Search Console(URL 접두어 `https://www.pondmakers.com/`, HTML 태그 → SEO 설정 Google 칸, Sitemaps에 `sitemap.xml`)
 
 ## 5단계. pondmakers.com 도메인 옮기기 (www 연결로 결정, 2026-10-23)
 
