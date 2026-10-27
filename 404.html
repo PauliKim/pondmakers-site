@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- 없는 주소에 Cloudflare Pages가 404 상태로 보여 주는 페이지. 어느 깊이의 주소에서도 열리므로 경로는 모두 /로 시작한다.
+     이 파일이 없으면 Pages가 없는 주소에도 첫 화면을 200으로 보여 줘 검색엔진이 중복 페이지로 본다.
+     주소가 /en/, /ja/로 시작하면 그 언어로 안내한다(문구는 이 파일에 직접 쓴다). -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>페이지를 찾을 수 없습니다 · 폰드메이커스</title>
+<link rel="icon" href="/assets/logo/favicon.png">
+<link rel="stylesheet" href="/styles.css">
+<style>
+.nf { min-height: 100vh; min-height: 100dvh; display: grid; place-content: center; justify-items: center; gap: 20px; padding: 40px 16px; text-align: center; background: var(--bg); }
+.nf img { height: 24px; width: auto; }
+.nf .code { font: 700 clamp(64px, 14vw, 120px)/1 var(--font-en); color: var(--accent); margin: 8px 0 0; }
+.nf h1 { font: 700 var(--t-28)/1.35 var(--font-ko); color: var(--title); margin: 0; }
+.nf p { font: 400 var(--t-16)/1.6 var(--font-ko); color: var(--text); margin: 0; max-width: 32em; }
+.nf .btn { margin-top: 8px; background: var(--accent); color: var(--on-accent); }
+</style>
+</head>
+<body>
+<main class="nf">
+  <a href="/" id="nf-logo" aria-label="폰드메이커스 처음으로"><img class="logo-light" src="/assets/logo/logo.svg" alt="pondmakers"><img class="logo-dark" src="/assets/logo/logo-white.svg" alt="pondmakers"></a>
+  <p class="code" aria-hidden="true">404</p>
+  <h1 id="nf-title">페이지를 찾을 수 없습니다</h1>
+  <p id="nf-desc">주소가 바뀌었거나 없는 페이지입니다. 홈에서 다시 찾아 주세요.</p>
+  <a class="btn" href="/" id="nf-home">홈으로</a>
+</main>
+<script>
+(() => {
+  const T = {
+    en: { lang: "en", home: "/en/", title: "Page not found", desc: "The page may have moved or no longer exists. Please start again from the home page.", btn: "Go to home", doc: "Page not found · Pondmakers", logo: "Pondmakers home" },
+    ja: { lang: "ja", home: "/ja/", title: "ページが見つかりません", desc: "ページが移動したか、存在しない可能性があります。ホームからもう一度お探しください。", btn: "ホームへ", doc: "ページが見つかりません · Pondmakers", logo: "Pondmakers ホーム" }
+  };
+  const t = T[(location.pathname.match(/^\/(en|ja)(\/|$)/) || [])[1]];
+  if (!t) return;
+  document.documentElement.lang = t.lang;
+  document.title = t.doc;
+  const $ = (id) => document.getElementById(id);
+  $("nf-title").textContent = t.title;
+  $("nf-desc").textContent = t.desc;
+  $("nf-home").textContent = t.btn;
+  $("nf-home").href = $("nf-logo").href = t.home;
+  $("nf-logo").setAttribute("aria-label", t.logo);
+})();
+</script>
+</body>
+</html>
