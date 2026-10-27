@@ -1,6 +1,6 @@
 # 예전 pondmakers.com(그누보드) 주소를 새 주소로 넘긴다
-/theme/basic/policy/sub01.php  /policy/privacy.html  301
-/theme/basic/policy/sub02.php  /policy/email.html    301
+/theme/basic/policy/sub01.php  /policy/privacy  301
+/theme/basic/policy/sub02.php  /policy/email    301
 /page/page.php                 /#section02           301
 /bbs/board.php                 /#section05           301
 /pondmakers/                   /                     301
